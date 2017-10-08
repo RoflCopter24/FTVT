@@ -1,0 +1,24 @@
+<template>
+    <v-toolbar class="indigo" dense>
+        <v-btn flat @click="broadcast('edit:addPlayer')">
+            <v-icon>directions_run</v-icon>
+            Spieler
+        </v-btn>
+        <v-btn flat @click="broadcast('edit:addText')">
+            <v-icon>text_fields</v-icon>
+            Freitext
+        </v-btn>
+    </v-toolbar>
+</template>
+
+<script>
+import EventBus from '../helpers/EventBus.js';
+
+export default {
+    methods: {
+        broadcast(selector) {
+            EventBus.$emit(selector, null);
+        },
+    },
+};
+</script>
