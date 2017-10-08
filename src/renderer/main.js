@@ -260,6 +260,7 @@ function appQuit() {
     Electron.remote.app.quit();
 }
 
+// EventHooks for Win/Linux
 EventBus.$on('doc:new', newDoc);
 EventBus.$on('doc:export', exportDoc);
 EventBus.$on('doc:open', loadDoc);
@@ -267,6 +268,15 @@ EventBus.$on('doc:save', saveDoc);
 EventBus.$on('doc:saveAs', saveDocAs);
 EventBus.$on('doc:close', closeDoc);
 EventBus.$on('app:quit', appQuit);
+
+// EventHooks for MacOS
+Electron.remote.app.on('doc:new', newDoc);
+Electron.remote.app.on('doc:export', exportDoc);
+Electron.remote.app.on('doc:open', loadDoc);
+Electron.remote.app.on('doc:save', saveDoc);
+Electron.remote.app.on('doc:saveAs', saveDocAs);
+Electron.remote.app.on('doc:close', closeDoc);
+Electron.remote.app.on('app:quit', appQuit);
 
 /* eslint-disable no-new */
 const vue = new Vue({

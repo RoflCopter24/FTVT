@@ -1,4 +1,4 @@
-import { app, BrowserWindow, fs} from 'electron' // eslint-disable-line
+import { app, BrowserWindow, fs, Menu} from 'electron' // eslint-disable-line
 
 /**
  * Set `__static` path to static files in production
@@ -14,7 +14,35 @@ const isDevBuild = process.env.NODE_ENV === 'development';
 const winURL = isDevBuild
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`;
-const menuTpl = {};
+const menuTpl = [
+    {
+        label: app.getName(),
+        submenu: [
+            { role: 'about' },
+            { type: 'separator' },
+            { role: 'services', submenu: [] },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideothers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' },
+        ],
+    },
+    {
+        label: 'Edit',
+        submenu: [
+            { role: 'undo' },
+            { role: 'redo' },
+            { type: 'separator' },
+            { role: 'cut' },
+            { role: 'copy' },
+            { role: 'paste' },
+            { role: 'delete' },
+            { role: 'selectall' },
+        ],
+    },
+];
 global.isMacOS = isMacOS;
 
 function createWindow() {
@@ -26,15 +54,19 @@ function createWindow() {
         useContentSize: true,
         width: 1280,
         transparent: true,
-        frame: !isDevBuild,
+        frame: isDevBuild,
     });
+
+
+    const menu = Menu.buildFromTemplate(menuTpl);
 
     if (!isMacOS && !isDevBuild) {
         mainWindow.setMenuBarVisibility(false);
     }
 
+
     if (isMacOS) {
-        mainWindow.setMenu(menuTpl);
+        mainWindow.setMenu(menu);
     }
 
     mainWindow.loadURL(winURL);
