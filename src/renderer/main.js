@@ -58,7 +58,7 @@ function currDocSaveObj() {
         currDoc.selectedObject.setNotSelected();
     }
 
-    return saveObj = {
+    return {
         title: currDoc.title,
         newPlayerCount: currDoc.newPlayerCount,
         newTextCount: currDoc.newTextCount,
