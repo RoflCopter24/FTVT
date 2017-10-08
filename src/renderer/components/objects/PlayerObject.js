@@ -314,20 +314,12 @@ class PlayerObject extends Konva.Group {
 
     static FromJSON(json) {
         const jsonObj       = JSON.parse(json);
-        const instance      = new PlayerObject(jsonObj.x, jsonObj.y, jsonObj.title);
 
-        instance.baseColor  = jsonObj.baseColor;
-        instance.txtColor   = jsonObj.txtColor;
-        instance.aCounter   = jsonObj.aCounter;
-        instance.base       = instance.find(instance.title + '_base');
-        instance.baseText   = instance.find(instance.title + '_baseText');
-
-        return instance;
+        return this.FromObject(jsonObj);
     }
 
     static FromObject(obj) {
         const instance      = new PlayerObject(obj.attrs.x, obj.attrs.y, obj.attrs.id);
-        debugger;
 
         instance._baseColor = obj.baseColor;
         instance._txtColor  = obj.txtColor;
