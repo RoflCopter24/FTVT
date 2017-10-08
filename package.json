@@ -1,12 +1,12 @@
 {
   "name": "FTVT",
-  "version": "0.5.0",
+  "version": "2017.10.08+devel",
   "author": "Florian Vick <florian@florian-vick.de>",
   "description": "A visualisation tool for football tactics",
-  "license": null,
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
-    "build": "node .electron-vue/build.js && electron-builder",
+    "build": "node .electron-vue/build.js && export USE_SYSTEM_XORRISO=true && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
@@ -19,7 +19,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "FTVT",
+    "productName": "Fussball Taktik-Visualisierungstool",
     "appId": "org.roflcopter24.ftvt",
     "directories": {
       "output": "build"
@@ -49,6 +49,8 @@
       "icon": "build/icons/icon.ico"
     },
     "linux": {
+      "executableName": "ftvt",
+      "category": "graphics",
       "icon": "build/icons"
     }
   },
