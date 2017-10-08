@@ -124,7 +124,6 @@
 
                 this.document.stage.on('click', this.onContainerClick);
 
-
                 if (this.document.wasLoaded) {
                     const bgImgObj = new Image();
                     bgImgObj.onload = () => {
@@ -157,6 +156,7 @@
                         });
 
                         this.document.background.add(bgImg);
+                        this.document.background.draw();
                     };
                     bgImgObj.src = '/static/FussballFeld.jpg';
                 }

@@ -51,6 +51,18 @@ function newDoc() {
     });
 }
 
+function closeDoc() {
+    for (let i = 0; i < appData.documents.length; i++) {
+        if (appData.documents[i].id === appData.active) {
+            appData.documents.splice(i, 1);
+        }
+    }
+}
+
+/**
+ * Creates a document save object from the active document
+ * @returns {object}
+ */
 function currDocSaveObj() {
     const currDoc = appData.currDoc();
 
@@ -69,12 +81,67 @@ function currDocSaveObj() {
 }
 
 /**
- * Creates a stringified JSON document from the active document
+ * Stringifies the current document
  * and saves it to local storage
  */
 function exitSave() {
     const saveObj = currDocSaveObj();
     window.localStorage.setItem('exitSave', JSON.stringify(saveObj));
+}
+
+/**
+ * Called when the saving process is done
+ * @param err The error object if one occurred
+ */
+function onSaveResult(err) {
+    if (err) {
+        EventBus.$emit('app:saveFailed', err.message);
+    }
+
+    EventBus.$emit('app:saveSuccess');
+}
+
+/**
+ * Saves the current document to a file in the
+ * specified path
+ * @param filePath The path to save the document to
+ */
+function saveToFile(filePath) {
+    const saveObj   = currDocSaveObj();
+    const fs        = Electron.remote.require('fs');
+    const path      = Electron.remote.require('path');
+
+    saveObj.title = path.win32.basename(filePath, '.ftv');
+    appData.currDoc().title = saveObj.title;
+
+    fs.writeFile(filePath, JSON.stringify(saveObj), onSaveResult);
+}
+
+/**
+ * Asks the user for a new file path and saves the current
+ * document if a choice was made.
+ */
+function saveDocAs() {
+    const opts = {
+        title: 'Visualisierung speichern',
+        buttonLabel: 'Speichern',
+        filters: [
+            { name: 'FT Visualisierung', extensions: ['ftv'] },
+        ],
+    };
+
+    Electron.remote.dialog.showSaveDialog(Electron.remote.getCurrentWindow(), opts, (filePath) => {
+        saveToFile(filePath);
+    });
+}
+
+function saveDoc() {
+    const currDoc = appData.currDoc();
+    if (currDoc.filePath) {
+        saveToFile(currDoc.filePath);
+        return;
+    }
+    saveDocAs();
 }
 
 function objectLayerFromObject(json) {
@@ -154,6 +221,9 @@ function appQuit() {
 
 EventBus.$on('doc:new', newDoc);
 EventBus.$on('doc:export', exportDoc);
+EventBus.$on('doc:save', saveDoc);
+EventBus.$on('doc:saveAs', saveDocAs);
+EventBus.$on('doc:close', closeDoc);
 EventBus.$on('app:quit', appQuit);
 
 /* eslint-disable no-new */
@@ -162,7 +232,7 @@ const vue = new Vue({
         return appData;
     },
     components: { App },
-    template: '<App v-bind:documents="documents" v-bind:active="active" v-bind:settings="settings" :isMacOS="isMacOS"/>',
+    template: '<App v-bind:documents="documents" v-bind:active.sync="active" v-bind:settings="settings" :isMacOS="isMacOS"/>',
     beforeDestroy() {
         exitSave();
     },

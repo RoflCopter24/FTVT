@@ -15,7 +15,7 @@
                     <v-icon class="window-btn-close" @click="winClose">close</v-icon>
                 </div>
             </v-system-bar>
-            <v-tabs dark v-model="active">
+            <v-tabs dark v-bind:value="active" v-on:input="(ev) => activeTabChanged(ev)">
                 <toolbar></toolbar>
                 <v-tabs-bar class="indigo">
                     <v-tabs-item v-for="doc in documents" :key="doc.id" :href="'#' + doc.id" ripple> {{ doc.title }}</v-tabs-item>
@@ -43,7 +43,7 @@
   import EditMenu from '@/components/menus/MenuEdit';
 
   export default {
-    name: 'test-project',
+    name: 'ftvt-app',
       props: ['documents', 'settings', 'active', 'isMacOS'],
     components: {
         WelcomeView,
@@ -54,9 +54,12 @@
         EditMenu,
     },
     data: () => ({
-      title: 'FTVT',
+        title: 'FTVT',
     }),
     methods: {
+        activeTabChanged(newTabId) {
+            this.$emit('update:active', newTabId);
+        },
         winMinimize() {
             this.$electron.remote.getCurrentWindow().minimize();
         },

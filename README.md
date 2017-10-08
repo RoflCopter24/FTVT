@@ -1,4 +1,5 @@
 # FTVT
+[![Build Status](https://travis-ci.org/RoflCopter24/FTVT.svg?branch=master)](https://travis-ci.org/RoflCopter24/FTVT)
 
 > An electron-vue project
 
