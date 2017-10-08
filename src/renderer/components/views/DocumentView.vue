@@ -23,7 +23,27 @@
             Wird exportiert...
         </snackbar>
 
+        <snackbar v-model="snackbarSaving">
+            <v-progress-circular indeterminate class="indigo--text"></v-progress-circular>
+            Visualisierung wird gespeichert...
+        </snackbar>
+
+        <snackbar v-model="snackbarLoading">
+            <v-progress-circular indeterminate class="indigo--text"></v-progress-circular>
+            Visualisierung wird geladen...
+        </snackbar>
+
         <v-snackbar v-model="snackbarExportDone" success>
+            <v-icon>done</v-icon>
+            Export erfolgreich!
+        </v-snackbar>
+
+        <v-snackbar v-model="snackbarSavingDone" :timeout="2000" success>
+            <v-icon>done</v-icon>
+            Export erfolgreich!
+        </v-snackbar>
+
+        <v-snackbar v-model="snackbarLoadingDone" :timeout="2000" success>
             <v-icon>done</v-icon>
             Export erfolgreich!
         </v-snackbar>
@@ -32,6 +52,18 @@
             <v-icon>error</v-icon>
             &nbsp;Export fehlgeschlagen!<br/>
             &nbsp;{{exportError}}
+        </v-snackbar>
+
+        <v-snackbar v-model="snackbarSavingFailed" error multiLine>
+            <v-icon>error</v-icon>
+            &nbsp;Speichern fehlgeschlagen!<br/>
+            &nbsp;{{saveError}}
+        </v-snackbar>
+
+        <v-snackbar v-model="snackbarLoadingFailed" error multiLine>
+            <v-icon>error</v-icon>
+            &nbsp;Laden fehlgeschlagen!<br/>
+            &nbsp;{{loadError}}
         </v-snackbar>
     </div>
 </template>
@@ -67,7 +99,15 @@
               snackbarExporting: false,
               snackbarExportDone: false,
               snackbarExportFailed: false,
+              snackbarLoading: false,
+              snackbarLoadDone: false,
+              snackbarLoadFailed: false,
+              snackbarSaving: false,
+              snackbarSaveDone: false,
+              snackbarSaveFailed: false,
               exportError: '',
+              saveError: '',
+              loadError: '',
           };
         },
         methods: {
@@ -131,6 +171,15 @@
                         this.document.background.draw();
                     };
                     bgImgObj.src = '/static/FussballFeld.jpg';
+
+                    const currObjects = this.document.objects.children;
+
+                    for (let i = 0; i < currObjects.length; i++) {
+                        if (currObjects[i] instanceof PlayerObject ||
+                            currObjects[i] instanceof TextObject) {
+                            currObjects[i].on('click', this.onSelectedObject);
+                        }
+                    }
                 } else {
 //                    const rect = new Konva.Rect({
 //                        x: 0,
@@ -285,6 +334,27 @@
                 this.document.stage.toDataURL({
                    callback: imgUrl => this.saveImage(filePath, imgUrl),
                 });
+            });
+
+            EventBus.$on('app:startSave', () => { this.snackbarSaving = true; });
+            EventBus.$on('app:startLoad', () => { this.snackbarLoading = true; });
+            EventBus.$on('app:loadSuccess', () => {
+               this.snackbarLoading = false;
+               this.snackbarLoadDone = true;
+            });
+            EventBus.$on('app:saveSuccess', () => {
+                this.snackbarSaving = false;
+                this.snackbarSaveDone = true;
+            });
+            EventBus.$on('app:loadError', (msg) => {
+                this.snackbarLoading = false;
+                this.loadError = msg;
+                this.snackbarLoadFailed = true;
+            });
+            EventBus.$on('app:saveError', (msg) => {
+                this.snackbarSaving = false;
+                this.saveError = msg;
+                this.snackbarSaveFailed = true;
             });
         },
         computed: {

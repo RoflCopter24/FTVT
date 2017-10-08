@@ -37,7 +37,7 @@ let docCounter = 1; // Counter for new document ids and names
  */
 function newDoc() {
     docCounter++;
-    appData.documents.push({
+    const newDoc = {
         id: 'doc-' + docCounter,
         title: 'Untitled ' + docCounter,
         newPlayerCount: 0,
@@ -48,7 +48,9 @@ function newDoc() {
         background: new Konva.Layer({ id: 'bg', name: 'Hintergrund', listening: 'false' }),
         author: '',
         wasLoaded: false,
-    });
+    };
+    appData.documents.push(newDoc);
+    appData.active = newDoc.id;
 }
 
 function closeDoc() {
@@ -129,7 +131,6 @@ function saveDocAs() {
             { name: 'FT Visualisierung', extensions: ['ftv'] },
         ],
     };
-
     Electron.remote.dialog.showSaveDialog(Electron.remote.getCurrentWindow(), opts, (filePath) => {
         saveToFile(filePath);
     });
@@ -167,6 +168,46 @@ function objectLayerFromObject(json) {
     }
 
     return layer;
+}
+
+function loadDoc() {
+    const fs = Electron.remote.require('fs');
+
+    const opts = {
+        title: 'Visualisierung laden',
+        buttonLabel: 'Laden',
+        filters: [
+            { name: 'FT Visualisierung', extensions: ['ftv'] },
+        ],
+    };
+
+    Electron.remote.dialog.showOpenDialog(Electron.remote.getCurrentWindow(), opts, (filePaths) => {
+        EventBus.$emit('app:loadStart');
+        fs.readFile(filePaths[0], (err, data) => {
+            if (err) {
+                EventBus.$emit('app:loadError', err.message);
+                return;
+            }
+
+            try {
+                newDoc();
+                const saveObj = JSON.parse(data);
+                const currDoc = appData.currDoc();
+                currDoc.title = saveObj.title;
+                currDoc.newPlayerCount = saveObj.newPlayerCount;
+                currDoc.newTextCount = saveObj.newTextCount;
+                // currDoc.objects = Konva.Node.create(exitSave.objects);
+                currDoc.objects = objectLayerFromObject(saveObj.objects);
+                currDoc.background = Konva.Node.create(saveObj.background);
+                currDoc.author = saveObj.author;
+                currDoc.wasLoaded = true;
+                currDoc.filePath = filePaths[0];
+                EventBus.$emit('app:loadSuccess');
+            } catch (e) {
+                EventBus.$emit('app:loadError', e);
+            }
+        });
+    });
 }
 
 /**
@@ -221,6 +262,7 @@ function appQuit() {
 
 EventBus.$on('doc:new', newDoc);
 EventBus.$on('doc:export', exportDoc);
+EventBus.$on('doc:open', loadDoc);
 EventBus.$on('doc:save', saveDoc);
 EventBus.$on('doc:saveAs', saveDocAs);
 EventBus.$on('doc:close', closeDoc);

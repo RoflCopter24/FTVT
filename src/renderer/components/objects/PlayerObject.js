@@ -7,7 +7,7 @@ class PlayerObject extends Konva.Group {
      * @param {number} startY     Position on the y-Axis
      * @param {string} objectName Name of the Object
      */
-    constructor(startX, startY, objectName) {
+    constructor(startX, startY, objectName, loaded) {
         super({
             x: startX,
             y: startY,
@@ -20,13 +20,15 @@ class PlayerObject extends Konva.Group {
         this._title      = objectName;
         this._baseColor  = '#ff0000';
         this._txtColor   = '#ffffff';
-        this.base       = this.createBaseCircle(this.baseColor());
-        this.baseText   = this.createBaseText(this.title(), 16, 'Roboto', this.txtColor());
+        if (!loaded) {
+            this.base = this.createBaseCircle(this.baseColor());
+            this.baseText = this.createBaseText(this.title(), 16, 'Roboto', this.txtColor());
+
+            this.add(this.base);
+            this.add(this.baseText);
+        }
         this._selected   = false;
         this.aCounter   = 0;
-
-        this.add(this.base);
-        this.add(this.baseText);
     }
 
     baseColor(value) {
@@ -319,8 +321,7 @@ class PlayerObject extends Konva.Group {
     }
 
     static FromObject(obj) {
-        const instance      = new PlayerObject(obj.attrs.x, obj.attrs.y, obj.attrs.id);
-
+        const instance      = new PlayerObject(obj.attrs.x, obj.attrs.y, obj.attrs.id, true);
         instance._baseColor = obj.baseColor;
         instance._txtColor  = obj.txtColor;
         instance.aCounter   = obj.aCounter;

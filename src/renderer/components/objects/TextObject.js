@@ -71,14 +71,27 @@ export default class TextObject extends Konva.Text {
         return this._fontSize;
     }
 
+    toObject() {
+        const baseObj = super.toObject();
+
+        baseObj.txtColor = this._txtColor;
+        baseObj.fontSize = this._fontSize;
+        baseObj.id       = this._pId;
+
+        return baseObj;
+    }
+
     static FromObject(obj) {
-        const instance = Konva.Node.create(obj);
+        const instance = new TextObject(obj.attrs.x, obj.attrs.y, obj.attrs.text, obj.id);
 
         instance.setNotSelected();
-        instance.pFontSize(instance.fontSize());
-        instance.txtColor(instance.fill());
-        instance.pText(instance.text());
-        instance.pId(instance.id());
+        instance._fontSize  = obj.fontSize;
+        instance._txtColor  = obj.txtColor;
+        instance._pText     = instance.text();
+        instance._pId       = instance.id();
+
+        instance.fontSize(obj.fontSize);
+        instance.fill(obj.txtColor);
 
         return instance;
     }

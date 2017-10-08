@@ -22,7 +22,7 @@
                 { title: 'Neu', selector: 'doc:new' },
                 { title: 'Öffnen', selector: 'doc:open' },
                 { title: 'Speichern', selector: 'doc:save' },
-                { title: 'Speichern unter', selector: 'doc:save-as' },
+                { title: 'Speichern unter', selector: 'doc:saveAs' },
                 { title: 'Schließen', selector: 'doc:close' },
                 {},
                 { title: 'Exportieren', selector: 'doc:export' },
