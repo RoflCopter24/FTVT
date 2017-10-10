@@ -1,6 +1,6 @@
 {
   "name": "FTVT",
-  "version": "2017.10.08+devel",
+  "version": "2017.10.10+devel",
   "author": "Florian Vick <florian@florian-vick.de>",
   "description": "A visualisation tool for football tactics",
   "license": "MIT",
