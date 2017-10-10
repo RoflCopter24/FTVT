@@ -122,7 +122,6 @@ if (isMacOS) {
     ];
 }
 global.isMacOS = isMacOS;
-
 app.setName('FTVT');
 
 function createWindow() {
@@ -134,9 +133,8 @@ function createWindow() {
         useContentSize: true,
         width: 1280,
         transparent: true,
-        frame: isDevBuild,
+        frame: !isMacOS && isDevBuild,
     });
-
 
     const menu = Menu.buildFromTemplate(menuTpl);
 
@@ -144,7 +142,7 @@ function createWindow() {
         mainWindow.setMenuBarVisibility(false);
     }
 
-    mainWindow.setMenu(menu);
+    Menu.setApplicationMenu(menu);
 
     mainWindow.loadURL(winURL);
 
