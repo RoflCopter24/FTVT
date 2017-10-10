@@ -5,7 +5,7 @@ import { app, BrowserWindow, fs, Menu} from 'electron' // eslint-disable-line
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
+    global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\') // eslint-disable-line
 }
 
 let mainWindow;
@@ -14,8 +14,91 @@ const isDevBuild = process.env.NODE_ENV === 'development';
 const winURL = isDevBuild
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`;
+global.staticDir = isDevBuild ? '/static' : global.__static;
 const menuTpl = [
     {
+        label: 'Datei',
+        submenu: [
+            {
+                label: 'Neu',
+                click() { mainWindow.webContents.send('doc:new'); },
+            },
+            {
+                label: 'Öffnen',
+                click() { mainWindow.webContents.send('doc:open'); },
+            },
+            {
+                label: 'Speichern',
+                click() { mainWindow.webContents.send('doc:save'); },
+            },
+            {
+                label: 'Speichern unter',
+                click() { mainWindow.webContents.send('doc:saveAs'); },
+            },
+            {
+                label: 'Schließen',
+                click() { mainWindow.webContents.send('doc:close'); },
+            },
+            { type: 'separator' },
+            {
+                label: 'Exportieren',
+                click() { mainWindow.webContents.send('doc:export'); },
+            },
+        ],
+    },
+    {
+        label: 'Bearbeiten',
+        submenu: [
+            { role: 'undo' },
+            { role: 'redo' },
+            { type: 'separator' },
+            { role: 'cut' },
+            { role: 'copy' },
+            { role: 'paste' },
+            { role: 'pasteandmatchstyle' },
+            { role: 'delete' },
+            { role: 'selectall' },
+        ],
+    },
+    {
+        label: 'Ansicht',
+        submenu: [
+            { role: 'resetzoom' },
+        ],
+    },
+    {
+        label: 'Fenster',
+        role: 'window',
+        submenu: [
+            { role: 'minimize' },
+            { role: 'close' },
+        ],
+    },
+    {
+        label: 'Hilfe',
+        role: 'help',
+        submenu: [
+            {
+                label: 'Learn More',
+                click() { require('electron').shell.openExternal('https://electron.atom.io'); },
+            },
+        ],
+    },
+];
+
+if (isDevBuild) {
+    menuTpl.push({
+        label: 'Developer',
+        submenu: [
+            { role: 'reload' },
+            { role: 'forcereload' },
+            { role: 'toggledevtools' },
+        ],
+    });
+}
+
+if (isMacOS) {
+    menuTpl.unshift({
         label: app.getName(),
         submenu: [
             { role: 'about' },
@@ -28,22 +111,19 @@ const menuTpl = [
             { type: 'separator' },
             { role: 'quit' },
         ],
-    },
-    {
-        label: 'Edit',
-        submenu: [
-            { role: 'undo' },
-            { role: 'redo' },
-            { type: 'separator' },
-            { role: 'cut' },
-            { role: 'copy' },
-            { role: 'paste' },
-            { role: 'delete' },
-            { role: 'selectall' },
-        ],
-    },
-];
+    });
+
+    // Window menu
+    menuTpl[3].submenu = [
+        { role: 'close' },
+        { role: 'minimize' },
+        { type: 'separator' },
+        { role: 'front' },
+    ];
+}
 global.isMacOS = isMacOS;
+
+app.setName('FTVT');
 
 function createWindow() {
   /**
@@ -64,10 +144,7 @@ function createWindow() {
         mainWindow.setMenuBarVisibility(false);
     }
 
-
-    if (isMacOS) {
-        mainWindow.setMenu(menu);
-    }
+    mainWindow.setMenu(menu);
 
     mainWindow.loadURL(winURL);
 

@@ -38,14 +38,14 @@
             Export erfolgreich!
         </v-snackbar>
 
-        <v-snackbar v-model="snackbarSavingDone" :timeout="2000" success>
+        <v-snackbar v-model="snackbarSaveDone" :timeout="2000" success>
             <v-icon>done</v-icon>
-            Export erfolgreich!
+            Erfolgreich gespeichert!
         </v-snackbar>
 
-        <v-snackbar v-model="snackbarLoadingDone" :timeout="2000" success>
+        <v-snackbar v-model="snackbarLoadDone" :timeout="2000" success>
             <v-icon>done</v-icon>
-            Export erfolgreich!
+            Erfolgreich geladen!
         </v-snackbar>
 
         <v-snackbar v-model="snackbarExportFailed" error multiLine>
@@ -54,13 +54,13 @@
             &nbsp;{{exportError}}
         </v-snackbar>
 
-        <v-snackbar v-model="snackbarSavingFailed" error multiLine>
+        <v-snackbar v-model="snackbarSaveFailed" error multiLine>
             <v-icon>error</v-icon>
             &nbsp;Speichern fehlgeschlagen!<br/>
             &nbsp;{{saveError}}
         </v-snackbar>
 
-        <v-snackbar v-model="snackbarLoadingFailed" error multiLine>
+        <v-snackbar v-model="snackbarLoadFailed" error multiLine>
             <v-icon>error</v-icon>
             &nbsp;Laden fehlgeschlagen!<br/>
             &nbsp;{{loadError}}
@@ -108,6 +108,7 @@
               exportError: '',
               saveError: '',
               loadError: '',
+              staticAssetDir: this.$electron.remote.getGlobal('staticDir'),
           };
         },
         methods: {
@@ -162,15 +163,13 @@
                     height: window.innerHeight - 128,
                 });
 
-                this.document.stage.on('click', this.onContainerClick);
-
                 if (this.document.wasLoaded) {
                     const bgImgObj = new Image();
                     bgImgObj.onload = () => {
                         this.document.background.get('#bgImage')[0].image(bgImgObj);
                         this.document.background.draw();
                     };
-                    bgImgObj.src = '/static/FussballFeld.jpg';
+                    bgImgObj.src = this.staticAssetDir + '/FussballFeld.jpg';
 
                     const currObjects = this.document.objects.children;
 
@@ -207,9 +206,10 @@
                         this.document.background.add(bgImg);
                         this.document.background.draw();
                     };
-                    bgImgObj.src = '/static/FussballFeld.jpg';
+                    bgImgObj.src = this.staticAssetDir + '/FussballFeld.jpg';
                 }
 
+                this.document.stage.on('click', this.onContainerClick);
                 this.document.stage.add(this.document.background);
                 this.document.stage.add(this.document.objects);
                 this.document.stage.draw();

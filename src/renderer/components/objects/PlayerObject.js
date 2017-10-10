@@ -208,7 +208,7 @@ class PlayerObject extends Konva.Group {
             fill: fillColor,
             stroke: strokeColor,
             strokeWidth: strokeW,
-            tension: 0.5,
+            tension: 0,
         });
     }
 
