@@ -20,6 +20,14 @@
                                     Textfarbe: <input type="color" v-bind:value="selectedObject.txtColor()" v-on:input="ev => { selectedObject.txtColor(ev.target.value) }" id="txt-color" name="txt-color">
                                 </label>
                         </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsPlayer">
+                                <v-btn color="warning" flat dark @click="broadcast('doc:selClearArrows')">
+                                    <v-icon>delete</v-icon>Pfeile
+                                </v-btn>
+                                <v-btn color="error" flat dark @click="broadcast('doc:selDelete')">
+                                    <v-icon>delete</v-icon>Objekt
+                                </v-btn>
+                        </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsText">
                             <v-text-field label="ID" v-bind:value="selectedObject.pId()" v-on:input="val => { selectedObject.pId(val) }" :rules="nameRules" :counter="15"></v-text-field>
                         </v-list-tile>

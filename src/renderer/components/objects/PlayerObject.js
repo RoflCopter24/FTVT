@@ -145,6 +145,16 @@ class PlayerObject extends Konva.Group {
         this.aCounter++;
     }
 
+    clearArrows() {
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            const isArrow = this.children[i] instanceof Konva.Arrow;
+            console.log(isArrow);
+            if (isArrow) {
+                this.children.splice(i, 1);
+            }
+        }
+    }
+
     /**
      * Creates and returns a new simple {Konva.Arrow} object.
      * @param startPos Startposition of the arrow, rel to this object

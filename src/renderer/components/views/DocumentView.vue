@@ -145,7 +145,7 @@
                 }
 
                 this.document.selectedObject.addComplexArrow(this.arrowComplexPoints,
-                    this.arrowComplexPoints.pop());
+                    this.arrowComplexPoints.pop()); // Last Point of the path is also the end
             },
             broadcast(selector) {
                 EventBus.$emit(selector, null);
@@ -180,17 +180,6 @@
                         }
                     }
                 } else {
-//                    const rect = new Konva.Rect({
-//                        x: 0,
-//                        y: 0,
-//                        width: this.document.stage.getWidth(),
-//                        height: this.document.stage.getHeight(),
-//                        fill: 'green',
-//                        stroke: 'black',
-//                        strokeWidth: 1,
-//                    });
-//                    this.document.background.add(rect);
-
                     const bgImgObj = new Image();
                     bgImgObj.onload = () => {
                         const bgImg = new Konva.Image({
@@ -213,6 +202,12 @@
                 this.document.stage.add(this.document.background);
                 this.document.stage.add(this.document.objects);
                 this.document.stage.draw();
+            },
+            removeArrowsOnSelection() {
+                if (this.document.selectedObject instanceof PlayerObject) {
+                    this.document.selectedObject.clearArrows();
+                    this.document.objects.drawScene();
+                }
             },
             saveImage(filePath, image) {
                 const nativeImg = this.$electron.nativeImage.createFromDataURL(image);
@@ -276,6 +271,10 @@
                         this.addStraightArrow();
                         return;
                     } else if (this.arrowComplexMode) {
+                        this.dragStop = {
+                            x: ev.evt.x - 300,
+                            y: ev.evt.y - 128,
+                        };
                         // If arrow complex mode we add this location as
                         // another path point
                         this.arrowComplexPoints.push({
@@ -297,6 +296,8 @@
                 }
             },
             onPlayerDragEnd() {
+                // When the player stops dragging the selected object, we must
+                // recompute the position for the context menu
                 this.$nextTick(function () {
                     this.computePlayerCtxMenuPos(this.document.selectedObject);
                 });
@@ -355,6 +356,13 @@
                 this.snackbarSaving = false;
                 this.saveError = msg;
                 this.snackbarSaveFailed = true;
+            });
+            EventBus.$on('doc:selClearArrows', () => {
+                const isActive  = (this.activeComponent === this.document.id);
+
+                if (isActive && this.document.selectedObject) {
+                    this.removeArrowsOnSelection();
+                }
             });
         },
         computed: {
