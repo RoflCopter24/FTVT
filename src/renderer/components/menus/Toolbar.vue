@@ -8,6 +8,14 @@
             <v-icon>text_fields</v-icon>
             Freitext
         </v-btn>
+        <v-btn flat @click="broadcast('edit:addRectangle')">
+            <v-icon>add_box</v-icon>
+            Rechteck
+        </v-btn>
+        <v-btn flat @click="broadcast('edit:addCircle')">
+            <v-icon>add_circle</v-icon>
+            Kreis
+        </v-btn>
     </v-toolbar>
 </template>
 

@@ -310,10 +310,18 @@ class PlayerObject extends Konva.Group {
         return this.title() + ' (' + this.x() + ',' + this.y() + ')';
     }
 
+    /**
+     * Returns a JSON string representing this object and its data
+     * @returns {string}
+     */
     toJSON() {
         return JSON.stringify(this.toObject());
     }
 
+    /**
+     * Returns a storeable object for serialization
+     * @returns {any}
+     */
     toObject() {
         const baseObj = super.toObject();
 
@@ -324,12 +332,24 @@ class PlayerObject extends Konva.Group {
         return baseObj;
     }
 
+    /**
+     * Creates an instance of this object from a JSON string
+     * @param json The JSON string
+     * @returns {PlayerObject}
+     * @constructor
+     */
     static FromJSON(json) {
         const jsonObj       = JSON.parse(json);
 
         return this.FromObject(jsonObj);
     }
 
+    /**
+     * Creates a PlayerObject Instance from the specified KV Object
+     * @param obj
+     * @returns {PlayerObject}
+     * @constructor
+     */
     static FromObject(obj) {
         const instance      = new PlayerObject(obj.attrs.x, obj.attrs.y, obj.attrs.id, true);
         instance._baseColor = obj.baseColor;

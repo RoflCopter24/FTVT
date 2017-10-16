@@ -18,6 +18,11 @@
             <v-btn dark flat @click.native="addComplexArrow">Bestätigen</v-btn>
         </snackbar>
 
+        <snackbar dark v-model="snackbarCreateRect" :disable-timeout="true">
+            Start- und Endposition durch Klick festlegen
+            <v-btn dark flat @click.native="snackbarCreateRect = false; createRectMode = false">Abbrechen</v-btn>
+        </snackbar>
+
         <snackbar v-model="snackbarExporting">
             <v-progress-circular indeterminate class="indigo--text"></v-progress-circular>
             Wird exportiert...
@@ -75,6 +80,7 @@
     import TextObject from '../objects/TextObject';
     import PlayerContextMenu from '../menus/PlayerContext';
     import Snackbar from '../helpers/Snackbar';
+    import RectangleObject from '../objects/RectangleObject';
 
     export default {
         name: 'document',
@@ -91,11 +97,14 @@
               arrowStraightMode: false,
               arrowComplexMode: false,
               arrowComplexPoints: [],
+              createRectMode: false,
+              createRectSecPoint: false,
               dragStart: null,
               dragStop: null,
               playerMenuRefresh: false,
               snackbarStraightArr: false,
               snackbarComplexArr: false,
+              snackbarCreateRect: false,
               snackbarExporting: false,
               snackbarExportDone: false,
               snackbarExportFailed: false,
@@ -121,6 +130,19 @@
                 this.document.objects.draw();
 
                 this.document.newPlayerCount++;
+            },
+            addRectangle() {
+                const r = new RectangleObject(this.dragStart.x,
+                    this.dragStart.y, this.dragStop.x - this.dragStart.x,
+                    this.dragStop.y - this.dragStart.y,
+                    'Rectangle_' + this.document.newRectCount);
+
+                r.on('click', this.onSelectedObject);
+
+                this.document.objects.add(r);
+                this.document.objects.draw();
+
+                this.document.newRectCount++;
             },
             addText() {
                 const t = new TextObject(0, 0, 'Freitext', 'text' + this.document.newTextCount);
@@ -259,8 +281,9 @@
                 const cO = ev.target;
                 const isP = cO instanceof Konva.Circle;
                 const isT = cO instanceof Konva.Text;
+                const isR = cO instanceof Konva.Rect;
 
-                if (!isP && !isT) {
+                if (!isP && !isT && !isR) {
                     if (this.arrowStraightMode) {
                         this.dragStop = {
                             x: ev.evt.x - 300,
@@ -281,6 +304,29 @@
                             x: ev.evt.x - 300,
                             y: ev.evt.y - 128,
                         });
+                        return;
+                    } else if (this.createRectMode) {
+                        // createRectSecPoint determines whether this is
+                        // the start point of the rectangle of the finishing one.
+                        if (!this.createRectSecPoint) {
+                            this.dragStart = {
+                                x: ev.evt.x - 300,
+                                y: ev.evt.y - 128,
+                            };
+                            this.createRectSecPoint = true;
+
+                            return;
+                        }
+
+                        this.dragStop = {
+                            x: ev.evt.x - 300,
+                            y: ev.evt.y - 128,
+                        };
+                        this.createRectSecPoint = false;
+                        this.createRectMode = false;
+                        this.snackbarCreateRect = false;
+                        this.addRectangle();
+
                         return;
                     }
 
@@ -319,6 +365,17 @@
 
                 if (isActive) {
                     this.addText();
+                }
+            });
+
+            EventBus.$on('edit:addRectangle', () => {
+                const isActive = (this.activeComponent === this.document.id);
+
+                if (isActive) {
+                    this.dragStart = null;
+                    this.dragStop = null;
+                    this.createRectMode = true;
+                    this.snackbarCreateRect = true;
                 }
             });
 
