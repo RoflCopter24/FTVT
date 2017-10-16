@@ -7,6 +7,8 @@ import App from './App';
 import EventBus from './components/helpers/EventBus.js';
 import PlayerObject from './components/objects/PlayerObject';
 import TextObject from './components/objects/TextObject';
+import RectangleObject from './components/objects/RectangleObject';
+import CircleObject from './components/objects/CircleObject';
 
 Vue.use(Vuetify);
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
@@ -42,6 +44,8 @@ function newDoc() {
         title: 'Untitled ' + docCounter,
         newPlayerCount: 0,
         newTextCount: 0,
+        newRectCount: 0,
+        newCircleCount: 0,
         selectedObject: null,
         stage: new Konva.Stage(),
         objects: new Konva.Layer({ id: 'objects', name: 'Objekte' }),
@@ -161,6 +165,16 @@ function objectLayerFromObject(json) {
             case 'TextObject': {
                 const tO = TextObject.FromObject(childObjects[i]);
                 layer.add(tO);
+                break;
+            }
+            case 'RectangleObject': {
+                const rO = RectangleObject.FromObject(childObjects[i]);
+                layer.add(rO);
+                break;
+            }
+            case 'CircleObject': {
+                const cO = CircleObject.FromObject(childObjects[i]);
+                layer.add(cO);
                 break;
             }
             default:

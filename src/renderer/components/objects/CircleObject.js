@@ -3,19 +3,24 @@ import Konva from 'konva';
 const DEFAULT_FILL_COLOR = '#ffffff';
 const DEFAULT_STROKE_COLOR = '#000000';
 const DEFAULT_STROKE_WIDTH = 2;
+const DEFAULT_OPACITY      = 0.5;
 
-export default class CircleObject extends Konva.Circle {
-    constructor(startX, startY, cRadius, elemId) {
+export default class CircleObject extends Konva.Ellipse {
+    constructor(startX, startY, elemId, endX, endY) {
         super({
             x: startX,
             y: startY,
-            radius: cRadius,
             fill: DEFAULT_FILL_COLOR,
             stroke: DEFAULT_STROKE_COLOR,
             strokeWidth: DEFAULT_STROKE_WIDTH,
+            opacity: DEFAULT_OPACITY,
             name: 'CircleObject',
             id: elemId,
+            width: endX,
+            height: endY,
+            draggable: true,
         });
+        this._opacity = DEFAULT_OPACITY;
     }
 
     /**
@@ -24,6 +29,7 @@ export default class CircleObject extends Konva.Circle {
     setSelected() {
         this._selected = true;
         this.stroke('yellow');
+        this.strokeEnabled(true);
     }
 
     /**
@@ -31,6 +37,7 @@ export default class CircleObject extends Konva.Circle {
      */
     setNotSelected() {
         this._selected = false;
+        this.stroke(DEFAULT_STROKE_COLOR);
     }
 
     /**
@@ -43,6 +50,7 @@ export default class CircleObject extends Konva.Circle {
         if (value) {
             this.id(value);
         }
+        this.draw();
         return this.id();
     }
 
@@ -54,8 +62,19 @@ export default class CircleObject extends Konva.Circle {
     baseColor(value) {
         if (value) {
             this.fill(value);
+            super.opacity(this._opacity);
+            this.draw();
         }
         return this.fill();
+    }
+
+    opacity(value) {
+        if (value) {
+            this._opacity = value;
+            super.opacity(this._opacity);
+            this.draw();
+        }
+        return this._opacity;
     }
 
     /**
@@ -67,7 +86,7 @@ export default class CircleObject extends Konva.Circle {
 
         baseObj.id          = this.id();
         baseObj.baseColor   = this.fill();
-        baseObj.radius      = this.radius();
+        baseObj.opacity     = this._opacity;
 
         return baseObj;
     }
@@ -80,10 +99,10 @@ export default class CircleObject extends Konva.Circle {
      */
     static FromObject(obj) {
         const instance = new CircleObject(obj.attrs.x, obj.attrs.y,
-            obj.radius, obj.id);
+            obj.id, obj.attrs.width, obj.attrs.height);
 
-        instance.setNotSelected();
         instance.fill(obj.baseColor);
+        instance._opacity = obj.opacity;
 
         return instance;
     }

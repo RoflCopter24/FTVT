@@ -23,6 +23,11 @@
             <v-btn dark flat @click.native="snackbarCreateRect = false; createRectMode = false">Abbrechen</v-btn>
         </snackbar>
 
+        <snackbar dark v-model="snackbarCreateCircle" :disable-timeout="true">
+            Start- und Endposition durch Klick festlegen
+            <v-btn dark flat @click.native="snackbarCreateCircle = false; createCircleMode = false">Abbrechen</v-btn>
+        </snackbar>
+
         <snackbar v-model="snackbarExporting">
             <v-progress-circular indeterminate class="indigo--text"></v-progress-circular>
             Wird exportiert...
@@ -81,6 +86,7 @@
     import PlayerContextMenu from '../menus/PlayerContext';
     import Snackbar from '../helpers/Snackbar';
     import RectangleObject from '../objects/RectangleObject';
+    import CircleObject from '../objects/CircleObject';
 
     export default {
         name: 'document',
@@ -98,13 +104,16 @@
               arrowComplexMode: false,
               arrowComplexPoints: [],
               createRectMode: false,
+              createCircleMode: false,
               createRectSecPoint: false,
+              createCircleSecPoint: false,
               dragStart: null,
               dragStop: null,
               playerMenuRefresh: false,
               snackbarStraightArr: false,
               snackbarComplexArr: false,
               snackbarCreateRect: false,
+              snackbarCreateCircle: false,
               snackbarExporting: false,
               snackbarExportDone: false,
               snackbarExportFailed: false,
@@ -121,11 +130,25 @@
           };
         },
         methods: {
+            addCircle() {
+                const c = new CircleObject(this.dragStart.x, this.dragStart.y,
+                                        'Circle_' + this.document.newCircleCount,
+                                        this.dragStop.x - this.dragStart.x,
+                                        this.dragStop.y - this.dragStart.y);
+
+                c.on('click', this.onSelectedObject);
+
+                this.document.objects.add(c);
+                this.document.objects.draw();
+
+                this.document.newCircleCount++;
+            },
             addPlayer() {
                 const p = new PlayerObject(0, 0, 'Player ' + this.document.newPlayerCount);
 
                 p.on('click', this.onSelectedObject);
                 p.on('dragend', this.onPlayerDragEnd);
+
                 this.document.objects.add(p);
                 this.document.objects.draw();
 
@@ -197,7 +220,9 @@
 
                     for (let i = 0; i < currObjects.length; i++) {
                         if (currObjects[i] instanceof PlayerObject ||
-                            currObjects[i] instanceof TextObject) {
+                            currObjects[i] instanceof TextObject ||
+                            currObjects[i] instanceof RectangleObject ||
+                            currObjects[i] instanceof CircleObject) {
                             currObjects[i].on('click', this.onSelectedObject);
                         }
                     }
@@ -250,6 +275,7 @@
                 const doc = this.document;
 
                 this.arrowStraightMode = false;
+                this.arrowComplexMode = false;
 
                 if (doc.selectedObject !== null) {
                     doc.selectedObject.setNotSelected();
@@ -279,11 +305,12 @@
             },
             onContainerClick(ev) {
                 const cO = ev.target;
-                const isP = cO instanceof Konva.Circle;
+                const isP = cO instanceof Konva.Group;
                 const isT = cO instanceof Konva.Text;
                 const isR = cO instanceof Konva.Rect;
+                const isC = cO instanceof Konva.Circle;
 
-                if (!isP && !isT && !isR) {
+                if (!isP && !isT && !isR && !isC) {
                     if (this.arrowStraightMode) {
                         this.dragStop = {
                             x: ev.evt.x - 300,
@@ -328,12 +355,35 @@
                         this.addRectangle();
 
                         return;
+                    } else if (this.createCircleMode) {
+                        //
+                        if (!this.createCircSecPoint) {
+                            this.dragStart = {
+                                x: ev.evt.x - 300,
+                                y: ev.evt.y - 128,
+                            };
+                            this.createCircSecPoint = true;
+
+                            return;
+                        }
+
+                        this.dragStop = {
+                            x: ev.evt.x - 300,
+                            y: ev.evt.y - 128,
+                        };
+                        this.createCircSecPoint = false;
+                        this.createCircleMode = false;
+                        this.snackbarCreateCircle = false;
+                        this.addCircle();
+
+                        return;
                     }
 
                     ev.evt.preventDefault();
                     this.showPlayerMenu = false;
                     this.x = 0;
                     this.y = 0;
+                    debugger;
                     if (this.document.selectedObject !== null) {
                         this.document.selectedObject.setNotSelected();
                         this.document.selectedObject = null;
@@ -376,6 +426,17 @@
                     this.dragStop = null;
                     this.createRectMode = true;
                     this.snackbarCreateRect = true;
+                }
+            });
+
+            EventBus.$on('edit:addCircle', () => {
+                const isActive = (this.activeComponent === this.document.id);
+
+                if (isActive) {
+                    this.dragStart = null;
+                    this.dragStop = null;
+                    this.createCircleMode = true;
+                    this.snackbarCreateCircle = true;
                 }
             });
 
