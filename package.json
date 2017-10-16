@@ -1,6 +1,6 @@
 {
   "name": "FTVT",
-  "version": "2017.10.10+devel",
+  "version": "2017.10.16+devel",
   "author": "Florian Vick <florian@florian-vick.de>",
   "description": "A visualisation tool for football tactics",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "Fussball Taktik-Visualisierungstool",
+    "productName": "Fussballtaktik Visualisierungstool",
     "appId": "org.roflcopter24.ftvt",
     "directories": {
       "output": "build"
