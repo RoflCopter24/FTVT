@@ -379,6 +379,14 @@
                 }
             });
 
+            EventBus.$on('doc:redraw', () => {
+                const isActive = (this.activeComponent === this.document.id);
+
+                if (isActive) {
+                    this.document.objects.draw();
+                }
+            });
+
             EventBus.$on('app:doExport', (filePath) => {
                 const isActive  = (this.activeComponent === this.document.id);
 

@@ -7,6 +7,9 @@
                         <v-list-tile>
                             <h5>Inspektor</h5>
                         </v-list-tile>
+                        <!--
+                            PlayerObject
+                        -->
                         <v-list-tile v-if="selectedObject !== null && objectIsPlayer">
                                 <v-text-field label="Name" v-bind:value="selectedObject.title()" v-on:input="val => { selectedObject.title(val) }" :rules="nameRules" :counter="15"></v-text-field>
                         </v-list-tile>
@@ -28,6 +31,9 @@
                                     <v-icon>delete</v-icon>Objekt
                                 </v-btn>
                         </v-list-tile>
+                        <!--
+                            TextObject
+                        -->
                         <v-list-tile v-if="selectedObject !== null && objectIsText">
                             <v-text-field label="ID" v-bind:value="selectedObject.pId()" v-on:input="val => { selectedObject.pId(val) }" :rules="nameRules" :counter="15"></v-text-field>
                         </v-list-tile>
@@ -42,6 +48,33 @@
                         <v-list-tile v-if="selectedObject !== null && objectIsText">
                             <v-slider v-bind:value="selectedObject.pFontSize()" v-on:input="val => { selectedObject.pFontSize(val) }" :step="2" min="12" max="96" snap thumb-label dark></v-slider>
                         </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsText">
+                            <v-btn color="error" flat dark @click="broadcast('doc:selDelete')">
+                                <v-icon>delete</v-icon>
+                            </v-btn>
+                        </v-list-tile>
+                        <!--
+                            RectangleObject
+                        -->
+                        <v-list-tile v-if="selectedObject !== null && objectIsRect">
+                            <v-text-field label="ID" v-bind:value="selectedObject.pId()" v-on:input="val => { selectedObject.pId(val) }" :rules="nameRules" :counter="15"></v-text-field>
+                        </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsRect">
+                            <label for="txt-color-3">
+                                Rechteckfarbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value) }" id="txt-color-3" name="txt-color">
+                            </label>
+                        </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsRect">
+                            <v-btn color="error" flat dark @click="selectedObject.moveUp(); broadcast('doc:redraw');">
+                                <v-icon>flip_to_front</v-icon>Vorne
+                            </v-btn>
+                            <v-btn color="error" flat dark @click="selectedObject.moveDown(); broadcast('doc:redraw');">
+                                <v-icon>flip_to_back</v-icon>Hinten
+                            </v-btn>
+                            <v-btn color="error" flat dark @click="broadcast('doc:selDelete')">
+                                <v-icon>delete</v-icon>
+                            </v-btn>
+                        </v-list-tile>
                     </v-list>
                 </v-form>
             </v-flex>
@@ -53,6 +86,8 @@
     import EventBus from '../helpers/EventBus.js';
     import PlayerObject from '../objects/PlayerObject';
     import TextObject from '../objects/TextObject';
+    import RectangleObject from '../objects/RectangleObject';
+    import CircleObject from '../objects/CircleObject';
 
     export default {
         props: ['selectedObject'],
@@ -79,6 +114,12 @@
             },
             objectIsText: function objectIsText() {
                 return this.selectedObject instanceof TextObject;
+            },
+            objectIsRect: function objectIsRect() {
+                return this.selectedObject instanceof RectangleObject;
+            },
+            objectIsCircle: function objectIsCircle() {
+                return this.selectedObject instanceof CircleObject;
             },
         },
     };

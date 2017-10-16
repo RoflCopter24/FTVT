@@ -1,26 +1,21 @@
 import Konva from 'konva';
 
-const DEFAULT_FILL_COLOR    = '#ff3eef';
-const DEFAULT_STROKE_COLOR  = '#000000';
-const DEFAULT_STROKE_WIDTH  = 2;
-const DEFAULT_OPACITY       = 0.5;
+const DEFAULT_FILL_COLOR = '#ffffff';
+const DEFAULT_STROKE_COLOR = '#000000';
+const DEFAULT_STROKE_WIDTH = 2;
 
-export default class RectangleObject extends Konva.Rect {
-    constructor(startX, startY, rWidth, rHeight, elemId) {
+export default class CircleObject extends Konva.Circle {
+    constructor(startX, startY, cRadius, elemId) {
         super({
             x: startX,
             y: startY,
-            width: rWidth,
-            height: rHeight,
+            radius: cRadius,
             fill: DEFAULT_FILL_COLOR,
             stroke: DEFAULT_STROKE_COLOR,
             strokeWidth: DEFAULT_STROKE_WIDTH,
+            name: 'CircleObject',
             id: elemId,
-            name: 'RectangleObject',
-            opacity: DEFAULT_OPACITY,
-            draggable: true,
         });
-        this._opacity = DEFAULT_OPACITY;
     }
 
     /**
@@ -29,7 +24,6 @@ export default class RectangleObject extends Konva.Rect {
     setSelected() {
         this._selected = true;
         this.stroke('yellow');
-        this.strokeEnabled(true);
     }
 
     /**
@@ -37,7 +31,6 @@ export default class RectangleObject extends Konva.Rect {
      */
     setNotSelected() {
         this._selected = false;
-        this.strokeEnabled(false);
     }
 
     /**
@@ -61,24 +54,8 @@ export default class RectangleObject extends Konva.Rect {
     baseColor(value) {
         if (value) {
             this.fill(value);
-            this.opacity(this._opacity);
-            this.draw();
         }
         return this.fill();
-    }
-
-    /**
-     * Legacy property that controls the current opacity
-     * @param value
-     * @returns {*}
-     */
-    opacity(value) {
-        if (value) {
-            this._opacity = value;
-            super.opacity(this._opacity);
-            this.draw();
-        }
-        return this._opacity;
     }
 
     /**
@@ -90,6 +67,7 @@ export default class RectangleObject extends Konva.Rect {
 
         baseObj.id          = this.id();
         baseObj.baseColor   = this.fill();
+        baseObj.radius      = this.radius();
 
         return baseObj;
     }
@@ -101,8 +79,8 @@ export default class RectangleObject extends Konva.Rect {
      * @constructor
      */
     static FromObject(obj) {
-        const instance = new RectangleObject(obj.attrs.x, obj.attrs.y,
-            obj.attrs.width, obj.attrs.height, obj.id);
+        const instance = new CircleObject(obj.attrs.x, obj.attrs.y,
+            obj.radius, obj.id);
 
         instance.setNotSelected();
         instance.fill(obj.baseColor);
