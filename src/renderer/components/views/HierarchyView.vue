@@ -24,10 +24,10 @@
                                 </label>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsPlayer">
-                                <v-btn color="warning" flat dark @click="broadcast('doc:selClearArrows')">
+                                <v-btn color="warning" flat dark @click="broadcast('edit:selClearArrows')">
                                     <v-icon>delete</v-icon>Pfeile
                                 </v-btn>
-                                <v-btn color="error" flat dark @click="broadcast('doc:selDelete')">
+                                <v-btn color="error" flat dark @click="broadcast('edit:selDelete')">
                                     <v-icon>delete</v-icon>Objekt
                                 </v-btn>
                         </v-list-tile>
@@ -49,7 +49,7 @@
                             <v-slider v-bind:value="selectedObject.pFontSize()" v-on:input="val => { selectedObject.pFontSize(val) }" :step="2" min="12" max="96" snap thumb-label dark></v-slider>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsText">
-                            <v-btn color="error" flat dark @click="broadcast('doc:selDelete')">
+                            <v-btn color="error" flat dark @click="broadcast('edit:selDelete')">
                                 <v-icon>delete</v-icon>
                             </v-btn>
                         </v-list-tile>
@@ -71,7 +71,7 @@
                             <v-btn color="error" flat dark @click="selectedObject.moveDown(); broadcast('doc:redraw');">
                                 <v-icon>flip_to_back</v-icon>Hinten
                             </v-btn>
-                            <v-btn color="error" flat dark @click="broadcast('doc:selDelete')">
+                            <v-btn color="error" flat dark @click="broadcast('edit:selDelete')">
                                 <v-icon>delete</v-icon>
                             </v-btn>
                         </v-list-tile>

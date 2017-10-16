@@ -422,11 +422,22 @@
                 this.saveError = msg;
                 this.snackbarSaveFailed = true;
             });
-            EventBus.$on('doc:selClearArrows', () => {
+            EventBus.$on('edit:selClearArrows', () => {
                 const isActive  = (this.activeComponent === this.document.id);
 
                 if (isActive && this.document.selectedObject) {
                     this.removeArrowsOnSelection();
+                }
+            });
+            EventBus.$on('edit:selDelete', () => {
+                const isActive  = (this.activeComponent === this.document.id);
+
+                if (isActive && this.document.selectedObject) {
+                    this.showPlayerMenu = false;
+                    this.document.selectedObject.setNotSelected();
+                    this.document.selectedObject.destroy();
+                    this.document.selectedObject = null;
+                    this.document.objects.draw();
                 }
             });
         },
