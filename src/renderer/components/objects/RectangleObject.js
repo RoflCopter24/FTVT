@@ -21,6 +21,7 @@ export default class RectangleObject extends Konva.Rect {
             draggable: true,
         });
         this._opacity = DEFAULT_OPACITY;
+        this._border = false;
     }
 
     /**
@@ -82,6 +83,21 @@ export default class RectangleObject extends Konva.Rect {
     }
 
     /**
+     * Render border?
+     * @param value
+     * @returns {*}
+     */
+    border(value) {
+        if (value) {
+            this._border = value;
+            if (!this._selected) {
+                super.strokeEnabled(this._border);
+            }
+        }
+        return this._border;
+    }
+
+    /**
      * Returns a KV-representation of this object for storage/serialization
      * @returns {object}
      */
@@ -90,6 +106,7 @@ export default class RectangleObject extends Konva.Rect {
 
         baseObj.id          = this.id();
         baseObj.baseColor   = this.fill();
+        baseObj.border      = this.border();
 
         return baseObj;
     }
@@ -106,6 +123,7 @@ export default class RectangleObject extends Konva.Rect {
 
         instance.setNotSelected();
         instance.fill(obj.baseColor);
+        instance._border = obj.border;
 
         return instance;
     }

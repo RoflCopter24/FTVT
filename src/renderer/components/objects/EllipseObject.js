@@ -34,6 +34,8 @@ export default class EllipseObject extends Konva.Ellipse {
             draggable: true,
         });
         this._opacity = DEFAULT_OPACITY;
+        this._border = false;
+        this.strokeEnabled(false);
     }
 
     /**
@@ -82,6 +84,11 @@ export default class EllipseObject extends Konva.Ellipse {
         return this.fill();
     }
 
+    /**
+     * Legacy property that controls the current opacity
+     * @param value
+     * @returns {*}
+     */
     opacity(value) {
         if (value) {
             this._opacity = value;
@@ -91,6 +98,11 @@ export default class EllipseObject extends Konva.Ellipse {
         return this._opacity;
     }
 
+    /**
+     * Render border?
+     * @param value
+     * @returns {boolean|*}
+     */
     border(value) {
         if (value) {
             this._border = value;
