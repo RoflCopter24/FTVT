@@ -86,7 +86,7 @@
     import PlayerContextMenu from '../menus/PlayerContext';
     import Snackbar from '../helpers/Snackbar';
     import RectangleObject from '../objects/RectangleObject';
-    import CircleObject from '../objects/CircleObject';
+    import EllipseObject from '../objects/EllipseObject';
 
     export default {
         name: 'document',
@@ -131,10 +131,10 @@
         },
         methods: {
             addCircle() {
-                const c = new CircleObject(this.dragStart.x, this.dragStart.y,
+                const c = new EllipseObject(this.dragStart.x, this.dragStart.y,
                                         'Circle_' + this.document.newCircleCount,
-                                        this.dragStop.x - this.dragStart.x,
-                                        this.dragStop.y - this.dragStart.y);
+                                        this.dragStop.x,
+                                        this.dragStop.y);
 
                 c.on('click', this.onSelectedObject);
 
@@ -142,6 +142,15 @@
                 this.document.objects.draw();
 
                 this.document.newCircleCount++;
+                console.log({
+                    start: this.dragStart,
+                    stop: this.dragStop,
+                    deltaX: this.dragStop.x - this.dragStart.x,
+                    deltaY: this.dragStop.y - this.dragStart.y,
+                    actualWidth: c.getWidth(),
+                    actualHeight: c.getHeight(),
+                    actualPosition: c.getAbsolutePosition(),
+                });
             },
             addPlayer() {
                 const p = new PlayerObject(0, 0, 'Player ' + this.document.newPlayerCount);
@@ -222,7 +231,7 @@
                         if (currObjects[i] instanceof PlayerObject ||
                             currObjects[i] instanceof TextObject ||
                             currObjects[i] instanceof RectangleObject ||
-                            currObjects[i] instanceof CircleObject) {
+                            currObjects[i] instanceof EllipseObject) {
                             currObjects[i].on('click', this.onSelectedObject);
                         }
                     }
@@ -316,7 +325,6 @@
                             x: ev.evt.x - 300,
                             y: ev.evt.y - 128,
                         };
-                        console.log(this.dragStop);
                         this.arrowStraightMode = false;
                         this.addStraightArrow();
                         return;
@@ -383,7 +391,7 @@
                     this.showPlayerMenu = false;
                     this.x = 0;
                     this.y = 0;
-                    debugger;
+
                     if (this.document.selectedObject !== null) {
                         this.document.selectedObject.setNotSelected();
                         this.document.selectedObject = null;

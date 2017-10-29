@@ -8,7 +8,7 @@ import EventBus from './components/helpers/EventBus.js';
 import PlayerObject from './components/objects/PlayerObject';
 import TextObject from './components/objects/TextObject';
 import RectangleObject from './components/objects/RectangleObject';
-import CircleObject from './components/objects/CircleObject';
+import CircleObject from './components/objects/EllipseObject';
 
 Vue.use(Vuetify);
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));

@@ -15,8 +15,6 @@
             updatePos: function ux() {
                 this.$el.style.left = (this.position.x - (this.width / 2)) + 'px';
                 this.$el.style.top = (this.position.y - (this.height / 2)) + 'px';
-
-                console.log(this.width, this.height);
             },
         },
         mounted: function m() {

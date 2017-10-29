@@ -87,7 +87,7 @@
     import PlayerObject from '../objects/PlayerObject';
     import TextObject from '../objects/TextObject';
     import RectangleObject from '../objects/RectangleObject';
-    import CircleObject from '../objects/CircleObject';
+    import EllipseObject from '../objects/EllipseObject';
 
     export default {
         props: ['selectedObject'],
@@ -119,7 +119,7 @@
                 return this.selectedObject instanceof RectangleObject;
             },
             objectIsCircle: function objectIsCircle() {
-                return this.selectedObject instanceof CircleObject;
+                return this.selectedObject instanceof EllipseObject;
             },
         },
     };

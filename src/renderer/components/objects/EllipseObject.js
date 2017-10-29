@@ -1,23 +1,36 @@
 import Konva from 'konva';
 
-const DEFAULT_FILL_COLOR = '#ffffff';
-const DEFAULT_STROKE_COLOR = '#000000';
-const DEFAULT_STROKE_WIDTH = 2;
-const DEFAULT_OPACITY      = 0.5;
+const DEFAULT_FILL_COLOR    = '#ffffff';
+const DEFAULT_STROKE_COLOR  = '#000000';
+const DEFAULT_STROKE_WIDTH  = 2;
+const DEFAULT_OPACITY       = 0.5;
 
-export default class CircleObject extends Konva.Ellipse {
+export default class EllipseObject extends Konva.Ellipse {
+    /**
+     * Constructs a new instance of the {EllipseObject} class
+     * @param startX X-value of the first point
+     * @param startY Y-value of the first point
+     * @param elemId ID of this instance
+     * @param endX X-value of the end point
+     * @param endY Y-value of the end point
+     * @description
+     * The EllipseObject is treated as a rectangle during creation,
+     * so the start end end point will not be part of the ellipse itself
+     * but rather the bounding rectangle.
+     * The position of the object will be the center of the ellipse
+     */
     constructor(startX, startY, elemId, endX, endY) {
         super({
-            x: startX,
-            y: startY,
+            x: startX + ((endX - startX) /2), // Calculate the center X
+            y: startY + ((endY - startY) / 2), // Calculate the center Y 
             fill: DEFAULT_FILL_COLOR,
             stroke: DEFAULT_STROKE_COLOR,
             strokeWidth: DEFAULT_STROKE_WIDTH,
             opacity: DEFAULT_OPACITY,
-            name: 'CircleObject',
+            name: 'EllipseObject',
             id: elemId,
-            width: endX,
-            height: endY,
+            width: endX - startX,
+            height: endY - startY,
             draggable: true,
         });
         this._opacity = DEFAULT_OPACITY;
@@ -98,7 +111,7 @@ export default class CircleObject extends Konva.Ellipse {
      * @constructor
      */
     static FromObject(obj) {
-        const instance = new CircleObject(obj.attrs.x, obj.attrs.y,
+        const instance = new EllipseObject(obj.attrs.x, obj.attrs.y,
             obj.id, obj.attrs.width, obj.attrs.height);
 
         instance.fill(obj.baseColor);
