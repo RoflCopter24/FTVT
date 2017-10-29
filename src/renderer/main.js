@@ -8,7 +8,7 @@ import EventBus from './components/helpers/EventBus.js';
 import PlayerObject from './components/objects/PlayerObject';
 import TextObject from './components/objects/TextObject';
 import RectangleObject from './components/objects/RectangleObject';
-import CircleObject from './components/objects/EllipseObject';
+import EllipseObject from './components/objects/EllipseObject';
 
 Vue.use(Vuetify);
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
@@ -172,8 +172,8 @@ function objectLayerFromObject(json) {
                 layer.add(rO);
                 break;
             }
-            case 'CircleObject': {
-                const cO = CircleObject.FromObject(childObjects[i]);
+            case 'EllipseObject': {
+                const cO = EllipseObject.FromObject(childObjects[i]);
                 layer.add(cO);
                 break;
             }

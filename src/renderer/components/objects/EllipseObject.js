@@ -21,7 +21,7 @@ export default class EllipseObject extends Konva.Ellipse {
      */
     constructor(startX, startY, elemId, endX, endY) {
         super({
-            x: startX + ((endX - startX) /2), // Calculate the center X
+            x: startX + ((endX - startX) / 2), // Calculate the center X
             y: startY + ((endY - startY) / 2), // Calculate the center Y 
             fill: DEFAULT_FILL_COLOR,
             stroke: DEFAULT_STROKE_COLOR,
