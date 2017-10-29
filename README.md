@@ -1,7 +1,7 @@
 # FTVT
 [![Build Status](https://travis-ci.org/RoflCopter24/FTVT.svg?branch=master)](https://travis-ci.org/RoflCopter24/FTVT)
 
-> An electron-vue project
+> A soccer tactics visualisation tool
 
 #### Build Setup
 
@@ -19,8 +19,13 @@ npm run build
 # lint all JS/Vue component files in `src/`
 npm run lint
 
-```
-
 ---
 
 This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[331f85f](https://github.com/SimulatedGREG/electron-vue/tree/331f85fd556cc0d60a30ad019a44a29baaed49f5) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
+
+#### Project Overview
+
+The project consists of vue-components and custom ES6 classes.
+For drawing stuff Konva.js is used.
+Communication between components is handled via Vue instance that is used
+as a message bus.
