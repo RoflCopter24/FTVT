@@ -309,7 +309,7 @@
                 const isP = cO instanceof Konva.Group;
                 const isT = cO instanceof Konva.Text;
                 const isR = cO instanceof Konva.Rect;
-                const isC = cO instanceof Konva.Circle;
+                const isC = cO instanceof Konva.Ellipse;
 
                 if (!isP && !isT && !isR && !isC) {
                     if (this.arrowStraightMode) {

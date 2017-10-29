@@ -57,11 +57,11 @@
                             RectangleObject
                         -->
                         <v-list-tile v-if="selectedObject !== null && objectIsRect">
-                            <v-text-field label="ID" v-bind:value="selectedObject.pId()" v-on:input="val => { selectedObject.pId(val) }" :rules="nameRules" :counter="15"></v-text-field>
+                            <v-text-field label="ID" v-bind:value="selectedObject.pId()" v-on:input="val => { selectedObject.pId(val); }" :rules="nameRules" :counter="15"></v-text-field>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsRect">
                             <label for="txt-color-3">
-                                Rechteckfarbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value) }" id="txt-color-3" name="txt-color">
+                                Rechteckfarbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value); }" id="txt-color-3" name="txt-color">
                             </label>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsRect">
@@ -78,15 +78,15 @@
                         <!--
                             EllipseObject
                         -->
-                        <v-list-tile v-if="selectedObject !== null && objectIsCircle">
-                            <v-text-field label="ID" v-bind:value="selectedObject.pId()" v-on:input="val => { selectedObject.pId(val) }" :rules="nameRules" :counter="15"></v-text-field>
+                        <v-list-tile v-if="selectedObject !== null && objectIsEllipse">
+                            <v-text-field label="ID" v-bind:value="selectedObject.pId()" v-on:input="val => { selectedObject.pId(val); }" :rules="nameRules" :counter="15"></v-text-field>
                         </v-list-tile>
-                        <v-list-tile v-if="selectedObject !== null && objectIsCircle">
+                        <v-list-tile v-if="selectedObject !== null && objectIsEllipse">
                             <label for="txt-color-4">
-                                Rechteckfarbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value) }" id="txt-color-4" name="txt-color">
+                                Rechteckfarbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value); }" id="txt-color-4" name="txt-color">
                             </label>
                         </v-list-tile>
-                        <v-list-tile v-if="selectedObject !== null && objectIsCircle">
+                        <v-list-tile v-if="selectedObject !== null && objectIsEllipse">
                             <v-btn color="error" flat dark @click="selectedObject.moveUp(); broadcast('doc:redraw');">
                                 <v-icon>flip_to_front</v-icon>Vorne
                             </v-btn>
@@ -140,7 +140,7 @@
             objectIsRect: function objectIsRect() {
                 return this.selectedObject instanceof RectangleObject;
             },
-            objectIsCircle: function objectIsCircle() {
+            objectIsEllipse: function objectIsEllipse() {
                 return this.selectedObject instanceof EllipseObject;
             },
         },

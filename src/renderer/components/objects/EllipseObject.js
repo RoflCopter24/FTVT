@@ -11,8 +11,8 @@ export default class EllipseObject extends Konva.Ellipse {
      * @param startX X-value of the first point
      * @param startY Y-value of the first point
      * @param elemId ID of this instance
-     * @param endX X-value of the end point
-     * @param endY Y-value of the end point
+     * @param elemWidth X-value of the end point
+     * @param elemHeight Y-value of the end point
      * @description
      * The EllipseObject is treated as a rectangle during creation,
      * so the start end end point will not be part of the ellipse itself
@@ -41,8 +41,8 @@ export default class EllipseObject extends Konva.Ellipse {
      */
     setSelected() {
         this._selected = true;
-        this.stroke('yellow');
-        this.strokeEnabled(true);
+        super.stroke('yellow');
+        super.strokeEnabled(true);
     }
 
     /**
@@ -50,7 +50,8 @@ export default class EllipseObject extends Konva.Ellipse {
      */
     setNotSelected() {
         this._selected = false;
-        this.stroke(DEFAULT_STROKE_COLOR);
+        super.stroke(DEFAULT_STROKE_COLOR);
+        super.strokeEnabled(this._border);
     }
 
     /**
@@ -90,6 +91,13 @@ export default class EllipseObject extends Konva.Ellipse {
         return this._opacity;
     }
 
+    border(value) {
+        if (value) {
+            this._border = value;
+        }
+        return this._border;
+    }
+
     /**
      * Returns a KV-representation of this object for storage/serialization
      * @returns {object}
@@ -99,8 +107,8 @@ export default class EllipseObject extends Konva.Ellipse {
 
         baseObj.id              = this.id();
         baseObj.baseColor       = this.fill();
-        baseObj.opacity         = this._opacity;
-        baseObj.origPos         = this.getAbsolutePosition();
+        baseObj.opacity         = this.opacity();
+        baseObj.border          = this.border();
 
         console.log(baseObj);
 
@@ -120,6 +128,7 @@ export default class EllipseObject extends Konva.Ellipse {
 
         instance.fill(obj.baseColor);
         instance._opacity = obj.opacity;
+        instance.border(obj.border);
         console.log(obj);
 
         return instance;
