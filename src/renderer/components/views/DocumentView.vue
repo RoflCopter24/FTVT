@@ -131,10 +131,11 @@
         },
         methods: {
             addCircle() {
-                const c = new EllipseObject(this.dragStart.x, this.dragStart.y,
+                const radiusX = (this.dragStop.x - this.dragStart.x) / 2;
+                const radiusY = (this.dragStop.y - this.dragStart.y) / 2;
+                const c = new EllipseObject(this.dragStart.x + radiusX, this.dragStart.y + radiusY,
                                         'Circle_' + this.document.newCircleCount,
-                                        this.dragStop.x,
-                                        this.dragStop.y);
+                                        radiusX, radiusY);
 
                 c.on('click', this.onSelectedObject);
 
@@ -142,15 +143,6 @@
                 this.document.objects.draw();
 
                 this.document.newCircleCount++;
-                console.log({
-                    start: this.dragStart,
-                    stop: this.dragStop,
-                    deltaX: this.dragStop.x - this.dragStart.x,
-                    deltaY: this.dragStop.y - this.dragStart.y,
-                    actualWidth: c.getWidth(),
-                    actualHeight: c.getHeight(),
-                    actualPosition: c.getAbsolutePosition(),
-                });
             },
             addPlayer() {
                 const p = new PlayerObject(0, 0, 'Player ' + this.document.newPlayerCount);

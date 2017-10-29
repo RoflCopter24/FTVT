@@ -52,12 +52,14 @@ const menuTpl = [
             { role: 'undo' },
             { role: 'redo' },
             { type: 'separator' },
-            { role: 'cut' },
-            { role: 'copy' },
-            { role: 'paste' },
-            { role: 'pasteandmatchstyle' },
-            { role: 'delete' },
-            { role: 'selectall' },
+            {
+                role: 'delete',
+                click() { mainWindow.webContents.send('edit:selDelete'); },
+            },
+            {
+                label: 'Dokument-Einstellungen',
+                click() { mainWindow.webContents.send('doc:settings'); },
+            },
         ],
     },
     {

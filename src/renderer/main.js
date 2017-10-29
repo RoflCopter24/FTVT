@@ -14,9 +14,11 @@ Vue.use(Vuetify);
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.config.productionTip = false;
 
+// Disable zooming, otherwise Stage and Layer get VERY ugly
 Electron.webFrame.setVisualZoomLevelLimits(1, 1);
 Electron.webFrame.setLayoutZoomLevelLimits(0, 0);
 
+// The application data object that 'controls' all views
 const appData = {
     active: '',
     isMacOS: Electron.remote.getGlobal('isMacOS'),
@@ -57,6 +59,9 @@ function newDoc() {
     appData.active = newDoc.id;
 }
 
+/**
+ * Closes the current document thus removing it from the view
+ */
 function closeDoc() {
     for (let i = 0; i < appData.documents.length; i++) {
         if (appData.documents[i].id === appData.active) {
@@ -140,6 +145,9 @@ function saveDocAs() {
     });
 }
 
+/**
+ * Saves the current document to its last used filepath
+ */
 function saveDoc() {
     const currDoc = appData.currDoc();
     if (currDoc.filePath) {
@@ -149,6 +157,12 @@ function saveDoc() {
     saveDocAs();
 }
 
+/**
+ * Creates a new {Konva.Layer} instance from the supplied
+ * JSON string and creates the proper child object instances
+ * @param json The JSON string
+ * @returns {Konva.Layer}
+ */
 function objectLayerFromObject(json) {
     const childObjects = JSON.parse(json).children;
     const fakeData = JSON.parse(json);
@@ -291,6 +305,7 @@ Electron.ipcRenderer.on('doc:save', saveDoc);
 Electron.ipcRenderer.on('doc:saveAs', saveDocAs);
 Electron.ipcRenderer.on('doc:close', closeDoc);
 Electron.ipcRenderer.on('app:quit', appQuit);
+Electron.ipcRenderer.on('edit:selDelete', () => EventBus.$emit('edit:selDelete', null));
 
 /* eslint-disable no-new */
 const vue = new Vue({

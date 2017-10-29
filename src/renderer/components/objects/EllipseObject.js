@@ -19,18 +19,18 @@ export default class EllipseObject extends Konva.Ellipse {
      * but rather the bounding rectangle.
      * The position of the object will be the center of the ellipse
      */
-    constructor(startX, startY, elemId, endX, endY) {
+    constructor(startX, startY, elemId, elemWidth, elemHeight) {
         super({
-            x: startX + ((endX - startX) / 2), // Calculate the center X
-            y: startY + ((endY - startY) / 2), // Calculate the center Y 
+            x: startX, // Calculate the center X
+            y: startY, // Calculate the center Y
             fill: DEFAULT_FILL_COLOR,
             stroke: DEFAULT_STROKE_COLOR,
             strokeWidth: DEFAULT_STROKE_WIDTH,
             opacity: DEFAULT_OPACITY,
             name: 'EllipseObject',
             id: elemId,
-            width: endX - startX,
-            height: endY - startY,
+            radiusX: elemWidth,
+            radiusY: elemHeight,
             draggable: true,
         });
         this._opacity = DEFAULT_OPACITY;
@@ -97,9 +97,12 @@ export default class EllipseObject extends Konva.Ellipse {
     toObject() {
         const baseObj = super.toObject();
 
-        baseObj.id          = this.id();
-        baseObj.baseColor   = this.fill();
-        baseObj.opacity     = this._opacity;
+        baseObj.id              = this.id();
+        baseObj.baseColor       = this.fill();
+        baseObj.opacity         = this._opacity;
+        baseObj.origPos         = this.getAbsolutePosition();
+
+        console.log(baseObj);
 
         return baseObj;
     }
@@ -111,11 +114,13 @@ export default class EllipseObject extends Konva.Ellipse {
      * @constructor
      */
     static FromObject(obj) {
+        console.log(obj);
         const instance = new EllipseObject(obj.attrs.x, obj.attrs.y,
-            obj.id, obj.attrs.width, obj.attrs.height);
+            obj.id, obj.attrs.radiusX, obj.attrs.radiusY);
 
         instance.fill(obj.baseColor);
         instance._opacity = obj.opacity;
+        console.log(obj);
 
         return instance;
     }

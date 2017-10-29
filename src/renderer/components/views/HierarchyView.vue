@@ -75,6 +75,28 @@
                                 <v-icon>delete</v-icon>
                             </v-btn>
                         </v-list-tile>
+                        <!--
+                            EllipseObject
+                        -->
+                        <v-list-tile v-if="selectedObject !== null && objectIsCircle">
+                            <v-text-field label="ID" v-bind:value="selectedObject.pId()" v-on:input="val => { selectedObject.pId(val) }" :rules="nameRules" :counter="15"></v-text-field>
+                        </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsCircle">
+                            <label for="txt-color-4">
+                                Rechteckfarbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value) }" id="txt-color-4" name="txt-color">
+                            </label>
+                        </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsCircle">
+                            <v-btn color="error" flat dark @click="selectedObject.moveUp(); broadcast('doc:redraw');">
+                                <v-icon>flip_to_front</v-icon>Vorne
+                            </v-btn>
+                            <v-btn color="error" flat dark @click="selectedObject.moveDown(); broadcast('doc:redraw');">
+                                <v-icon>flip_to_back</v-icon>Hinten
+                            </v-btn>
+                            <v-btn color="error" flat dark @click="broadcast('edit:selDelete')">
+                                <v-icon>delete</v-icon>
+                            </v-btn>
+                        </v-list-tile>
                     </v-list>
                 </v-form>
             </v-flex>
