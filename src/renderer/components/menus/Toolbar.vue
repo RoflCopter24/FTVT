@@ -16,6 +16,10 @@
             <v-icon>add_circle</v-icon>
             Kreis
         </v-btn>
+        <v-btn flat @click="broadcast('edit:addLine')">
+            <v-icon>add</v-icon>
+            Linie
+        </v-btn>
     </v-toolbar>
 </template>
 

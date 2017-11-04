@@ -9,6 +9,7 @@ import PlayerObject from './components/objects/PlayerObject';
 import TextObject from './components/objects/TextObject';
 import RectangleObject from './components/objects/RectangleObject';
 import EllipseObject from './components/objects/EllipseObject';
+import LineObject from './components/objects/LineObject';
 
 Vue.use(Vuetify);
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
@@ -48,6 +49,7 @@ function newDoc() {
         newTextCount: 0,
         newRectCount: 0,
         newCircleCount: 0,
+        newLineCount: 0,
         selectedObject: null,
         stage: new Konva.Stage(),
         objects: new Konva.Layer({ id: 'objects', name: 'Objekte' }),
@@ -189,6 +191,11 @@ function objectLayerFromObject(json) {
             case 'EllipseObject': {
                 const cO = EllipseObject.FromObject(childObjects[i]);
                 layer.add(cO);
+                break;
+            }
+            case 'LineObject': {
+                const lO = LineObject.FromObject(childObjects[i]);
+                layer.add(lO);
                 break;
             }
             default:

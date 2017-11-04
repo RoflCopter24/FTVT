@@ -362,8 +362,8 @@ class PlayerObject extends Konva.Group {
             instance.add(childInstance);
         }
 
-        instance.base       = instance.find('#' + obj.id + '_base');
-        instance.baseText   = instance.find('#' + obj.id + '_baseText');
+        instance.base       = instance.find('.PlayerObjectBase')[0];
+        instance.baseText   = instance.find('.PlayerObjectText')[0];
 
         return instance;
     }

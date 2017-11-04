@@ -31,6 +31,14 @@
                                     <v-icon>delete</v-icon>Objekt
                                 </v-btn>
                         </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsPlayer">
+                            <v-btn color="error" flat dark @click="selectedObject.moveUp(); broadcast('doc:redraw');">
+                                <v-icon>flip_to_front</v-icon>Vorne
+                            </v-btn>
+                            <v-btn color="error" flat dark @click="selectedObject.moveDown(); broadcast('doc:redraw');">
+                                <v-icon>flip_to_back</v-icon>Hinten
+                            </v-btn>
+                        </v-list-tile>
                         <!--
                             TextObject
                         -->
@@ -49,6 +57,12 @@
                             <v-slider v-bind:value="selectedObject.pFontSize()" v-on:input="val => { selectedObject.pFontSize(val) }" :step="2" min="12" max="96" snap thumb-label dark></v-slider>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsText">
+                            <v-btn color="error" flat dark @click="selectedObject.moveUp(); broadcast('doc:redraw');">
+                                <v-icon>flip_to_front</v-icon>Vorne
+                            </v-btn>
+                            <v-btn color="error" flat dark @click="selectedObject.moveDown(); broadcast('doc:redraw');">
+                                <v-icon>flip_to_back</v-icon>Hinten
+                            </v-btn>
                             <v-btn color="error" flat dark @click="broadcast('edit:selDelete')">
                                 <v-icon>delete</v-icon>
                             </v-btn>
@@ -87,6 +101,36 @@
                             </label>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsEllipse">
+                            Transparenz: &nbsp;
+                            <v-slider v-bind:value="selectedObject.opacity()" v-on:input="val => { selectedObject.opacity(val) }" :step=".1" min="0.0" max="1.0" snap thumb-label dark></v-slider>
+                        </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsEllipse">
+                            <v-btn color="error" flat dark @click="selectedObject.moveUp(); broadcast('doc:redraw');">
+                                <v-icon>flip_to_front</v-icon>Vorne
+                            </v-btn>
+                            <v-btn color="error" flat dark @click="selectedObject.moveDown(); broadcast('doc:redraw');">
+                                <v-icon>flip_to_back</v-icon>Hinten
+                            </v-btn>
+                            <v-btn color="error" flat dark @click="broadcast('edit:selDelete')">
+                                <v-icon>delete</v-icon>
+                            </v-btn>
+                        </v-list-tile>
+                        <!--
+                            LineObject
+                        -->
+                        <v-list-tile v-if="selectedObject !== null && objectIsLine">
+                            <v-text-field label="ID" v-bind:value="selectedObject.pId()" v-on:input="val => { selectedObject.pId(val); }" :rules="nameRules" :counter="15"></v-text-field>
+                        </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsLine">
+                            <label for="line-color">
+                                Linienfarbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value); }" id="line-color" name="line-color">
+                            </label>
+                        </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsLine">
+                            Transparenz: &nbsp;
+                            <v-slider v-bind:value="selectedObject.opacity()" v-on:input="val => { selectedObject.opacity(val) }" :step=".1" min="0.0" max="1.0" snap thumb-label dark></v-slider>
+                        </v-list-tile>
+                        <v-list-tile v-if="selectedObject !== null && objectIsLine">
                             <v-btn color="error" flat dark @click="selectedObject.moveUp(); broadcast('doc:redraw');">
                                 <v-icon>flip_to_front</v-icon>Vorne
                             </v-btn>
@@ -110,6 +154,7 @@
     import TextObject from '../objects/TextObject';
     import RectangleObject from '../objects/RectangleObject';
     import EllipseObject from '../objects/EllipseObject';
+    import LineObject from '../objects/LineObject';
 
     export default {
         props: ['selectedObject'],
@@ -142,6 +187,9 @@
             },
             objectIsEllipse: function objectIsEllipse() {
                 return this.selectedObject instanceof EllipseObject;
+            },
+            objectIsLine: function objectIsLine() {
+                return this.selectedObject instanceof LineObject;
             },
         },
     };

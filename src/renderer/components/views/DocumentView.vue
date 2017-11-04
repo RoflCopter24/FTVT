@@ -17,6 +17,11 @@
             <v-btn dark flat @click.native="snackbarComplexArr = false; arrowComplexMode = false">Abbrechen</v-btn>
             <v-btn dark flat @click.native="addComplexArrow">Bestätigen</v-btn>
         </snackbar>
+        <snackbar dark v-model="snackbarCreateLine" :disable-timeout="true">
+            Linie erstellen: Klicken um Wegpunkte hinzuzufügen
+            <v-btn dark flat @click.native="snackbarCreateLine = false; createLineMode = false">Abbrechen</v-btn>
+            <v-btn dark flat @click.native="addLine">Bestätigen</v-btn>
+        </snackbar>
 
         <snackbar dark v-model="snackbarCreateRect" :disable-timeout="true">
             Start- und Endposition durch Klick festlegen
@@ -87,6 +92,7 @@
     import Snackbar from '../helpers/Snackbar';
     import RectangleObject from '../objects/RectangleObject';
     import EllipseObject from '../objects/EllipseObject';
+    import LineObject from '../objects/LineObject';
 
     export default {
         name: 'document',
@@ -103,10 +109,12 @@
               arrowStraightMode: false,
               arrowComplexMode: false,
               arrowComplexPoints: [],
+              blockContainerClick: false,
               createRectMode: false,
               createCircleMode: false,
               createRectSecPoint: false,
               createCircleSecPoint: false,
+              createLineMode: false,
               dragStart: null,
               dragStop: null,
               playerMenuRefresh: false,
@@ -114,6 +122,7 @@
               snackbarComplexArr: false,
               snackbarCreateRect: false,
               snackbarCreateCircle: false,
+              snackbarCreateLine: false,
               snackbarExporting: false,
               snackbarExportDone: false,
               snackbarExportFailed: false,
@@ -154,6 +163,19 @@
                 this.document.objects.draw();
 
                 this.document.newPlayerCount++;
+            },
+            addLine() {
+                const l = new LineObject(this.linePoints, 'Line_' +
+                    this.document.newLineCount);
+                l.on('click', this.onSelectedObject);
+
+                this.document.objects.add(l);
+                this.document.objects.draw();
+
+                this.createLineMode = false;
+                this.snackbarCreateLine = false;
+
+                this.document.newLineCount++;
             },
             addRectangle() {
                 const r = new RectangleObject(this.dragStart.x,
@@ -197,7 +219,12 @@
                 EventBus.$emit(selector, null);
             },
             computePlayerCtxMenuPos(playerObj) {
-                const objPos = playerObj.getAbsolutePosition();
+                if (playerObj === null) {
+                    console.error('PlayerCtxMenu: Parameter NULL!');
+                    return;
+                }
+
+                const objPos = playerObj.getPosition();
                 const objHeight = playerObj.baseHeight();
                 this.x = (300 + objPos.x);
                 this.y = (130 + objPos.y) - objHeight;
@@ -223,7 +250,8 @@
                         if (currObjects[i] instanceof PlayerObject ||
                             currObjects[i] instanceof TextObject ||
                             currObjects[i] instanceof RectangleObject ||
-                            currObjects[i] instanceof EllipseObject) {
+                            currObjects[i] instanceof EllipseObject ||
+                            currObjects[i] instanceof LineObject) {
                             currObjects[i].on('click', this.onSelectedObject);
                         }
                     }
@@ -277,6 +305,7 @@
 
                 this.arrowStraightMode = false;
                 this.arrowComplexMode = false;
+                this.createLineMode = false;
 
                 if (doc.selectedObject !== null) {
                     doc.selectedObject.setNotSelected();
@@ -289,9 +318,12 @@
                 doc.objects.draw();
 
                 if (doc.selectedObject instanceof PlayerObject) {
-                    this.$nextTick(function () {
+                    this.blockContainerClick = true;
+                    ev.bubbles = false;
+                    this.$nextTick(() => {
                         this.computePlayerCtxMenuPos(doc.selectedObject);
                         this.showPlayerMenu = true;
+                        this.blockContainerClick = false;
                     });
                 }
             },
@@ -304,14 +336,20 @@
                 this.snackbarComplexArr = true;
                 this.arrowComplexPoints = [];
             },
+            onAddLine() {
+                this.createLineMode = true;
+                this.snackbarCreateLine = true;
+                this.linePoints = [];
+            },
             onContainerClick(ev) {
                 const cO = ev.target;
                 const isP = cO instanceof Konva.Group;
                 const isT = cO instanceof Konva.Text;
                 const isR = cO instanceof Konva.Rect;
                 const isC = cO instanceof Konva.Ellipse;
+                const isL = cO instanceof Konva.Line;
 
-                if (!isP && !isT && !isR && !isC) {
+                if (!isP && !isT && !isR && !isC && !isL) {
                     if (this.arrowStraightMode) {
                         this.dragStop = {
                             x: ev.evt.x - 300,
@@ -377,6 +415,9 @@
                         this.addCircle();
 
                         return;
+                    } else if (this.createLineMode) {
+                        this.linePoints.push(ev.evt.x - 300);
+                        this.linePoints.push(ev.evt.y - 128);
                     }
 
                     ev.evt.preventDefault();
@@ -384,7 +425,7 @@
                     this.x = 0;
                     this.y = 0;
 
-                    if (this.document.selectedObject !== null) {
+                    if (this.document.selectedObject !== null && !this.blockContainerClick) {
                         this.document.selectedObject.setNotSelected();
                         this.document.selectedObject = null;
                         this.document.objects.draw();
@@ -437,6 +478,14 @@
                     this.dragStop = null;
                     this.createCircleMode = true;
                     this.snackbarCreateCircle = true;
+                }
+            });
+
+            EventBus.$on('edit:addLine', () => {
+                const isActive = (this.activeComponent === this.document.id);
+
+                if (isActive) {
+                    this.onAddLine();
                 }
             });
 
