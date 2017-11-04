@@ -6,14 +6,13 @@ const DEFAULT_OPACITY       = 1;
 
 export default class LineObject extends Konva.Line {
     /**
-     * Constructs a new instance of the {EllipseObject} class
+     * Constructs a new instance of the {LineObject} class
      * @param linePoints All points on this line
      * @param elemId ID of this instance
      * @description
-     * The EllipseObject is treated as a rectangle during creation,
-     * so the start end end point will not be part of the ellipse itself
-     * but rather the bounding rectangle.
-     * The position of the object will be the center of the ellipse
+     * The LineObject is not really a line but a path connecting multiple
+     * points, so you can basically create crazy shapes with it by adding
+     * multiple points
      */
     constructor(linePoints, elemId) {
         super({
@@ -60,7 +59,7 @@ export default class LineObject extends Konva.Line {
     }
 
     /**
-     * Legacy property that controls the current fill color
+     * Legacy property that controls the current stroke color
      * @param value The new fill color or {null} to retrieve the current one
      * @returns {string}
      */

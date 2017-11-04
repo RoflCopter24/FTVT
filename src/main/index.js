@@ -49,9 +49,9 @@ const menuTpl = [
     {
         label: 'Bearbeiten',
         submenu: [
-            { role: 'undo' },
-            { role: 'redo' },
-            { type: 'separator' },
+            // { role: 'undo' },
+            // { role: 'redo' },
+            // { type: 'separator' },
             {
                 role: 'delete',
                 click() { mainWindow.webContents.send('edit:selDelete'); },

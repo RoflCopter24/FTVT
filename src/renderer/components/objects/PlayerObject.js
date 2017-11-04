@@ -1,5 +1,11 @@
 import Konva from 'konva';
 
+const BASE_CIRCLE_RADIUS            = 26;
+const BASE_CIRCLE_DEF_FILL_COLOR    = '#ff0000';
+const BASE_CIRCLE_DEF_STROKE_COLOR  = '#000000';
+const BASE_CIRCLE_DEF_STROKE_WIDTH  = 2;
+const BASE_TEXT_DEF_COLOR           = '#ffffff';
+
 class PlayerObject extends Konva.Group {
     /**
      * Constructs a new instance of the PlayerObject class
@@ -18,8 +24,8 @@ class PlayerObject extends Konva.Group {
         });
 
         this._title      = objectName;
-        this._baseColor  = '#ff0000';
-        this._txtColor   = '#ffffff';
+        this._baseColor  = BASE_CIRCLE_DEF_FILL_COLOR;
+        this._txtColor   = BASE_TEXT_DEF_COLOR;
         if (!loaded) {
             this.base = this.createBaseCircle(this.baseColor());
             this.baseText = this.createBaseText(this.title(), 16, 'Roboto', this.txtColor());
@@ -233,10 +239,10 @@ class PlayerObject extends Konva.Group {
         return new Konva.Circle({
             x: this.x(),
             y: this.y(),
-            radius: 32,
+            radius: BASE_CIRCLE_RADIUS,
             fill: color,
-            stroke: 'black',
-            strokeWidth: 4,
+            stroke: BASE_CIRCLE_DEF_STROKE_COLOR,
+            strokeWidth: BASE_CIRCLE_DEF_STROKE_WIDTH,
             name: 'PlayerObjectBase',
             id: this.title() + '_base',
         });
