@@ -252,7 +252,7 @@
                 this.document.stage = new Konva.Stage({
                     container: containerId,
                     width: window.innerWidth - 300,
-                    height: window.innerHeight - 128,
+                    height: (window.innerWidth * 0.6666) - 128,
                 });
 
                 if (this.document.wasLoaded) {
@@ -282,7 +282,7 @@
                             y: 0,
                             image: bgImgObj,
                             width: this.document.stage.getWidth(),
-                            height: this.document.stage.getHeight(),
+                            height: this.document.stage.getWidth() * 0.666,
                             id: 'bgImage',
                             name: 'bgImage',
                         });
