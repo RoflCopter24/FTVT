@@ -20,13 +20,19 @@
             <v-icon>add</v-icon>
             Linie
         </v-btn>
+        <v-btn flat @click="broadcast('edit:addBall')">
+            <v-icon-soccer>soccer</v-icon-soccer>
+            Fussball
+        </v-btn>
     </v-toolbar>
 </template>
 
 <script>
 import EventBus from '../helpers/EventBus.js';
+import VIconSoccer from '../helpers/v-icon-soccer';
 
 export default {
+    components: { VIconSoccer },
     methods: {
         broadcast(selector) {
             EventBus.$emit(selector, null);

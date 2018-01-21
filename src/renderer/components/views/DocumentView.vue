@@ -33,6 +33,11 @@
             <v-btn dark flat @click.native="snackbarCreateCircle = false; createCircleMode = false">Abbrechen</v-btn>
         </snackbar>
 
+        <snackbar dark v-model="snackbarCreateBall" :disable-timeout="true">
+            Ball durch Klick auf Position einfügen
+            <v-btn dark flat @click.native="snackbarCreateBall = false; createBallMode = false">Abbrechen</v-btn>
+        </snackbar>
+
         <snackbar v-model="snackbarExporting">
             <v-progress-circular indeterminate class="indigo--text"></v-progress-circular>
             Wird exportiert...
@@ -112,6 +117,7 @@
               blockContainerClick: false,
               createRectMode: false,
               createCircleMode: false,
+              createBallMode: false,
               createRectSecPoint: false,
               createCircleSecPoint: false,
               createLineMode: false,
@@ -122,6 +128,7 @@
               snackbarComplexArr: false,
               snackbarCreateRect: false,
               snackbarCreateCircle: false,
+              snackbarCreateBall: false,
               snackbarCreateLine: false,
               snackbarExporting: false,
               snackbarExportDone: false,
@@ -139,6 +146,23 @@
           };
         },
         methods: {
+            addBall() {
+                const ballRadius = 12;
+
+                const c = new EllipseObject(this.dragStart.x + (ballRadius / 2),
+                    this.dragStart.y + (ballRadius / 2),
+                    'Circle_' + this.document.newCircleCount,
+                    ballRadius, ballRadius);
+
+                c.on('click', this.onSelectedObject);
+
+                this.document.objects.add(c);
+                c.baseColor('#000000');
+                c.opacity(1);
+                this.document.objects.draw();
+
+                this.document.newCircleCount++;
+            },
             addCircle() {
                 let radiusX = (this.dragStop.x - this.dragStart.x) / 2;
                 let radiusY = (this.dragStop.y - this.dragStart.y) / 2;
@@ -434,6 +458,18 @@
                         this.addCircle();
 
                         return;
+                    } else if (this.createBallMode) {
+                        //
+                        this.dragStart = {
+                            x: ev.evt.x - 300,
+                            y: ev.evt.y - 128,
+                        };
+
+                        this.addBall();
+                        this.createBallMode = false;
+                        this.snackbarCreateBall = false;
+
+                        return;
                     } else if (this.createLineMode) {
                         this.linePoints.push(ev.evt.x - 300);
                         this.linePoints.push(ev.evt.y - 128);
@@ -497,6 +533,17 @@
                     this.dragStop = null;
                     this.createCircleMode = true;
                     this.snackbarCreateCircle = true;
+                }
+            });
+
+            EventBus.$on('edit:addBall', () => {
+                const isActive = (this.activeComponent === this.document.id);
+
+                if (isActive) {
+                    this.dragStart = null;
+                    this.dragStop = null;
+                    this.createBallMode = true;
+                    this.snackbarCreateBall = true;
                 }
             });
 
