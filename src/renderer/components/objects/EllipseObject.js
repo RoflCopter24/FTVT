@@ -84,6 +84,11 @@ export default class EllipseObject extends Konva.Ellipse {
         return this.fill();
     }
 
+    draw() {
+        super.opacity(this._opacity);
+        super.draw();
+    }
+
     /**
      * Legacy property that controls the current opacity
      * @param value
@@ -94,6 +99,14 @@ export default class EllipseObject extends Konva.Ellipse {
             this._opacity = value;
             super.opacity(this._opacity);
             this.draw();
+        }
+        return this._opacity;
+    }
+
+    opacityNowDraw(value) {
+        if (value) {
+            this._opacity = value;
+            super.opacity(this._opacity);
         }
         return this._opacity;
     }
@@ -122,8 +135,6 @@ export default class EllipseObject extends Konva.Ellipse {
         baseObj.opacity         = this.opacity();
         baseObj.border          = this.border();
 
-        console.log(baseObj);
-
         return baseObj;
     }
 
@@ -139,7 +150,7 @@ export default class EllipseObject extends Konva.Ellipse {
             obj.id, obj.attrs.radiusX, obj.attrs.radiusY);
 
         instance.fill(obj.baseColor);
-        instance._opacity = obj.opacity;
+        instance.opacityNowDraw(obj.opacity);
         instance.border(obj.border);
         console.log(obj);
 
