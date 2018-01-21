@@ -143,11 +143,22 @@
                 let radiusX = (this.dragStop.x - this.dragStart.x) / 2;
                 let radiusY = (this.dragStop.y - this.dragStart.y) / 2;
 
+                // Prevent negative radius by negating negative
+                // values
                 if (radiusX < 0) {
                     radiusX *= -1;
                 }
                 if (radiusY < 0) {
                     radiusY *= -1;
+                }
+
+                // Make sure width and height are always equal.
+                // We take the smaller value as the circle is then
+                // contained in the rectangle drawn by the user.
+                if (radiusX > radiusY) {
+                    radiusX = radiusY;
+                } else if (radiusX < radiusY) {
+                    radiusY = radiusX;
                 }
 
                 const c = new EllipseObject(this.dragStart.x + radiusX, this.dragStart.y + radiusY,
