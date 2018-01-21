@@ -344,6 +344,10 @@
                 this.snackbarExportDone = true;
             },
             onSelectedObject(ev) {
+                if (this.createBallMode || this.createCircleMode || this.createRectMode
+                    || this.createLineMode || this.arrowComplexMode || this.arrowStraightMode) {
+                    return;
+                }
                 const doc = this.document;
 
                 this.arrowStraightMode = false;
@@ -392,7 +396,7 @@
                 const isC = cO instanceof Konva.Ellipse;
                 const isL = cO instanceof Konva.Line;
 
-                if (!isP && !isT && !isR && !isC && !isL) {
+
                     if (this.arrowStraightMode) {
                         this.dragStop = {
                             x: ev.evt.x - 300,
@@ -475,6 +479,7 @@
                         this.linePoints.push(ev.evt.y - 128);
                     }
 
+                if (!isP && !isT && !isR && !isC && !isL) {
                     ev.evt.preventDefault();
                     this.showPlayerMenu = false;
                     this.x = 0;
