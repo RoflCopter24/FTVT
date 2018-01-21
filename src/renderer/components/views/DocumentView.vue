@@ -140,8 +140,16 @@
         },
         methods: {
             addCircle() {
-                const radiusX = (this.dragStop.x - this.dragStart.x) / 2;
-                const radiusY = (this.dragStop.y - this.dragStart.y) / 2;
+                let radiusX = (this.dragStop.x - this.dragStart.x) / 2;
+                let radiusY = (this.dragStop.y - this.dragStart.y) / 2;
+
+                if (radiusX < 0) {
+                    radiusX *= -1;
+                }
+                if (radiusY < 0) {
+                    radiusY *= -1;
+                }
+
                 const c = new EllipseObject(this.dragStart.x + radiusX, this.dragStart.y + radiusY,
                                         'Circle_' + this.document.newCircleCount,
                                         radiusX, radiusY);

@@ -1,6 +1,6 @@
 import Konva from 'konva';
 
-const BASE_CIRCLE_RADIUS            = 26;
+const BASE_CIRCLE_RADIUS            = 18;
 const BASE_CIRCLE_DEF_FILL_COLOR    = '#ff0000';
 const BASE_CIRCLE_DEF_STROKE_COLOR  = '#000000';
 const BASE_CIRCLE_DEF_STROKE_WIDTH  = 2;
