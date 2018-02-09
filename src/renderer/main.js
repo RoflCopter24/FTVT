@@ -51,7 +51,7 @@ function newDoc() {
         newCircleCount: 0,
         newLineCount: 0,
         selectedObject: null,
-        stage: new Konva.Stage(),
+        stage: null,
         objects: new Konva.Layer({ id: 'objects', name: 'Objekte' }),
         background: new Konva.Layer({ id: 'bg', name: 'Hintergrund', listening: 'false' }),
         author: '',
