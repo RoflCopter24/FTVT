@@ -358,6 +358,9 @@
                     doc.selectedObject.setNotSelected();
                     this.showPlayerMenu = false;
                 }
+                if (doc.selectedObject !== ev.currentTarget) {
+                    doc.selectedObject = null;
+                }
                 doc.selectedObject = ev.currentTarget;
                 this.x = ev.evt.clientX;
                 this.y = ev.evt.clientY;
@@ -397,87 +400,87 @@
                 const isL = cO instanceof Konva.Line;
 
 
-                    if (this.arrowStraightMode) {
-                        this.dragStop = {
-                            x: ev.evt.x - 300,
-                            y: ev.evt.y - 128,
-                        };
-                        this.arrowStraightMode = false;
-                        this.addStraightArrow();
-                        return;
-                    } else if (this.arrowComplexMode) {
-                        this.dragStop = {
-                            x: ev.evt.x - 300,
-                            y: ev.evt.y - 128,
-                        };
-                        // If arrow complex mode we add this location as
-                        // another path point
-                        this.arrowComplexPoints.push({
-                            x: ev.evt.x - 300,
-                            y: ev.evt.y - 128,
-                        });
-                        return;
-                    } else if (this.createRectMode) {
-                        // createRectSecPoint determines whether this is
-                        // the start point of the rectangle of the finishing one.
-                        if (!this.createRectSecPoint) {
-                            this.dragStart = {
-                                x: ev.evt.x - 300,
-                                y: ev.evt.y - 128,
-                            };
-                            this.createRectSecPoint = true;
-
-                            return;
-                        }
-
-                        this.dragStop = {
-                            x: ev.evt.x - 300,
-                            y: ev.evt.y - 128,
-                        };
-                        this.createRectSecPoint = false;
-                        this.createRectMode = false;
-                        this.snackbarCreateRect = false;
-                        this.addRectangle();
-
-                        return;
-                    } else if (this.createCircleMode) {
-                        //
-                        if (!this.createCircSecPoint) {
-                            this.dragStart = {
-                                x: ev.evt.x - 300,
-                                y: ev.evt.y - 128,
-                            };
-                            this.createCircSecPoint = true;
-
-                            return;
-                        }
-
-                        this.dragStop = {
-                            x: ev.evt.x - 300,
-                            y: ev.evt.y - 128,
-                        };
-                        this.createCircSecPoint = false;
-                        this.createCircleMode = false;
-                        this.snackbarCreateCircle = false;
-                        this.addCircle();
-
-                        return;
-                    } else if (this.createBallMode) {
-                        //
+                if (this.arrowStraightMode) {
+                    this.dragStop = {
+                        x: ev.evt.x - 300,
+                        y: ev.evt.y - 128,
+                    };
+                    this.arrowStraightMode = false;
+                    this.addStraightArrow();
+                    return;
+                } else if (this.arrowComplexMode) {
+                    this.dragStop = {
+                        x: ev.evt.x - 300,
+                        y: ev.evt.y - 128,
+                    };
+                    // If arrow complex mode we add this location as
+                    // another path point
+                    this.arrowComplexPoints.push({
+                        x: ev.evt.x - 300,
+                        y: ev.evt.y - 128,
+                    });
+                    return;
+                } else if (this.createRectMode) {
+                    // createRectSecPoint determines whether this is
+                    // the start point of the rectangle of the finishing one.
+                    if (!this.createRectSecPoint) {
                         this.dragStart = {
                             x: ev.evt.x - 300,
                             y: ev.evt.y - 128,
                         };
-
-                        this.addBall();
-                        this.createBallMode = false;
-                        this.snackbarCreateBall = false;
+                        this.createRectSecPoint = true;
 
                         return;
-                    } else if (this.createLineMode) {
-                        this.linePoints.push(ev.evt.x - 300);
-                        this.linePoints.push(ev.evt.y - 128);
                     }
+
+                    this.dragStop = {
+                        x: ev.evt.x - 300,
+                        y: ev.evt.y - 128,
+                    };
+                    this.createRectSecPoint = false;
+                    this.createRectMode = false;
+                    this.snackbarCreateRect = false;
+                    this.addRectangle();
+
+                    return;
+                } else if (this.createCircleMode) {
+                    //
+                    if (!this.createCircSecPoint) {
+                        this.dragStart = {
+                            x: ev.evt.x - 300,
+                            y: ev.evt.y - 128,
+                        };
+                        this.createCircSecPoint = true;
+
+                        return;
+                    }
+
+                    this.dragStop = {
+                        x: ev.evt.x - 300,
+                        y: ev.evt.y - 128,
+                    };
+                    this.createCircSecPoint = false;
+                    this.createCircleMode = false;
+                    this.snackbarCreateCircle = false;
+                    this.addCircle();
+
+                    return;
+                } else if (this.createBallMode) {
+                    //
+                    this.dragStart = {
+                        x: ev.evt.x - 300,
+                        y: ev.evt.y - 128,
+                    };
+
+                    this.addBall();
+                    this.createBallMode = false;
+                    this.snackbarCreateBall = false;
+
+                    return;
+                } else if (this.createLineMode) {
+                    this.linePoints.push(ev.evt.x - 300);
+                    this.linePoints.push(ev.evt.y - 128);
+                }
 
                 if (!isP && !isT && !isR && !isC && !isL) {
                     ev.evt.preventDefault();

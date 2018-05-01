@@ -15,12 +15,16 @@
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsPlayer">
                                 <label for="bg-color">
-                                    Farbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value) }" id="bg-color" name="bg-color">
+                                    Farbe:
+                                    <color-picker id="bg-color" v-bind:color="selectedObject.baseColor()"
+                                                  v-on:input="val => selectedObject.baseColor(val)"></color-picker>
                                 </label>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsPlayer">
                                 <label for="txt-color">
-                                    Textfarbe: <input type="color" v-bind:value="selectedObject.txtColor()" v-on:input="ev => { selectedObject.txtColor(ev.target.value) }" id="txt-color" name="txt-color">
+                                    Textfarbe:
+                                    <color-picker id="txt-color" v-bind:color="selectedObject.txtColor()"
+                                                  v-on:input="val => selectedObject.txtColor(val)"></color-picker>
                                 </label>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsPlayer">
@@ -50,7 +54,9 @@
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsText">
                             <label for="txt-color-2">
-                                Textfarbe: <input type="color" v-bind:value="selectedObject.txtColor()" v-on:input="ev => { selectedObject.txtColor(ev.target.value) }" id="txt-color-2" name="txt-color">
+                                Textfarbe:
+                                <color-picker id="txt-color-2" v-bind:color="selectedObject.txtColor()"
+                                              v-on:input="val => selectedObject.txtColor(val)"></color-picker>
                             </label>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsText">
@@ -75,7 +81,9 @@
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsRect">
                             <label for="txt-color-3">
-                                Rechteckfarbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value); }" id="txt-color-3" name="txt-color">
+                                Rechteckfarbe:
+                                <color-picker id="txt-color-3" v-bind:color="selectedObject.baseColor()"
+                                              v-on:input="val => selectedObject.baseColor(val)"></color-picker>
                             </label>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsRect">
@@ -97,7 +105,9 @@
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsEllipse">
                             <label for="txt-color-4">
-                                Rechteckfarbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value); }" id="txt-color-4" name="txt-color">
+                                Rechteckfarbe:
+                                <color-picker id="txt-color-4" v-bind:color="selectedObject.baseColor()"
+                                              v-on:input="val => selectedObject.baseColor(val)"></color-picker>
                             </label>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsEllipse">
@@ -123,7 +133,9 @@
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsLine">
                             <label for="line-color">
-                                Linienfarbe: <input type="color" v-bind:value="selectedObject.baseColor()" v-on:input="ev => { selectedObject.baseColor(ev.target.value); }" id="line-color" name="line-color">
+                                Linienfarbe:
+                                <color-picker id="line-color" v-bind:color="selectedObject.baseColor()"
+                                              v-on:input="val => selectedObject.baseColor(val)"></color-picker>
                             </label>
                         </v-list-tile>
                         <v-list-tile v-if="selectedObject !== null && objectIsLine">
@@ -155,8 +167,10 @@
     import RectangleObject from '../objects/RectangleObject';
     import EllipseObject from '../objects/EllipseObject';
     import LineObject from '../objects/LineObject';
+    import ColorPicker from '../helpers/ColorPicker';
 
     export default {
+        components: {ColorPicker},
         props: ['selectedObject'],
         data() {
           return {
@@ -200,6 +214,7 @@
     .navigation-drawer--permanent {
         margin-top: 130px !important;
         height: calc(100vh - 130px) !important;
+        overflow: visible;
     }
 
     .h-100 {
